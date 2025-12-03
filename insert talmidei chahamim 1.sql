@@ -1,4 +1,4 @@
-﻿
+﻿use Hazal
 
   INSERT INTO Talmidei_Hahamim
 (FullName, HebrewName, City, Country, Period, YearOfBirth, YearOfDeath, PlaceOfBirth, PlaceOfPtira, KnownFor, Notes, Sources)
@@ -411,13 +411,15 @@ VALUES
  N'חיבר את ספר הערוך ברומא – מילון תלמודי ומדרשי ראשון מסוגו, שסיכם את מסורת בבל, ארץ ישראל ואיטליה');
 
 
- INSERT INTO Talmidim (RabbiID, StudentID, FromYear, ToYear, Place, Notes)
+ INSERT INTO Talmidim (TeacherID, RabbiID,  FromYear, ToYear, Place, Notes)
 VALUES
 -- 🔹 בבל
 ((SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רב שרירא גאון'),
  (SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רב האי גאון'),
- 970, 1006, N'פומבדיתא', N'בנו ותלמידו; המשיך את ישיבת פומבדיתא אחריו'),
+ 970, 1006, N'פומבדיתא', N'בנו ותלמידו; המשיך את ישיבת פומבדיתא אחריו')
 
+  INSERT INTO Talmidim (TeacherID, RabbiID,  FromYear, ToYear, Place, Notes)
+VALUES
 -- 🔹 מקיירואן
 ((SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רב האי גאון'),
  (SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רב חננאל בן חושיאל'),
@@ -427,22 +429,36 @@ VALUES
  995, 1030, N'קיירואן', N'קיבל תורה ותשובות מרב האי גאון; שמר על שיטתו בביאור התלמוד'),
 ((SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רבי חושיאל בן אלחנן'),
  (SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רב חננאל בן חושיאל'),
- 990, 1030, N'קיירואן', N'אביו ורבו; מייסד ישיבת קיירואן'),
+ 990, 1030, N'קיירואן', N'אביו ורבו; מייסד ישיבת קיירואן')
 
+
+ INSERT INTO Talmidim (TeacherID, RabbiID,  FromYear, ToYear, Place, Notes)
+VALUES
 -- 🔹 ספרד
 ((SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רבי משה בן חנוך'),
  (SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רבי חנוך בן משה'),
  980, 1014, N'קורדובה', N'בנו ותלמידו; המשיך את ישיבת קורדובה'),
+ INSERT INTO Talmidim (TeacherID, RabbiID,  FromYear, ToYear, Place, Notes)
+VALUES
 ((SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רבי חנוך בן משה'),
  (SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רבי יצחק אבן אלבאליה'),
  1030, 1060, N'גרנדה', N'מראשי תלמידיו של ר׳ חנוך; הפך לפוסק חשוב בדרום ספרד'),
+
+
+
+
+
+ INSERT INTO Talmidim (TeacherID, RabbiID,  FromYear, ToYear, Place, Notes)
+VALUES
 ((SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רבי יצחק אבן אלבאליה'),
- (SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רבי ברוך אלבאליה'),
+(SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רבי ברוך אלבאליה'),
  1060, 1090, N'גרנדה', N'בנו ותלמידו; המשיך את הישיבה ואת דרכו ההלכתית'),
 ((SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רבי יצחק בן משה מבגדד'),
  (SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רבי יצחק אלפסי'),
- 1040, 1070, N'פאס', N'קיבל ממנו תורה ומסורת הגאונים; שמר על פסיקתם'),
+ 1040, 1070, N'פאס', N'קיבל ממנו תורה ומסורת הגאונים; שמר על פסיקתם')
 
+ INSERT INTO Talmidim (TeacherID, RabbiID,  FromYear, ToYear, Place, Notes)
+VALUES
 -- 🔹 אשכנז
 ((SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רבי קלונימוס בן משה מרומי'),
  (SELECT RabbiID FROM Talmidei_Hahamim WHERE FullName = N'רבי גרשום מאור הגולה'),

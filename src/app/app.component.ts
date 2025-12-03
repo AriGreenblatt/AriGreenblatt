@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { DatabaseService, TableInfo, ApiResponse } from './database.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -18,6 +19,8 @@ export class AppComponent implements OnInit {
   talmideiHahamim: any[] = [];
   filteredTalmideiHahamim: any[] = [];
   selectedRabbi: any = null;
+  rabbiStudents: any[] = [];
+  rabbiTeachers: any[] = [];
   isLoading = false;
   error: string | null = null;
   sortColumn: string = '';
@@ -32,6 +35,7 @@ export class AppComponent implements OnInit {
   selectedCities: string[] = [];
   selectedCountries: string[] = [];
   selectedPeriods: string[] = [];
+  searchText: string = '';
   
   // Dropdown states
   showCityDropdown: boolean = false;
@@ -117,13 +121,56 @@ export class AppComponent implements OnInit {
     this.periods = [...new Set(this.talmideiHahamim.map(r => r.Period).filter(v => v))].sort();
   }
 
+  getFilteredCities(): string[] {
+    // If no countries selected, show all cities
+    if (this.selectedCountries.length === 0) {
+      return this.cities;
+    }
+    
+    // Filter cities based on selected countries
+    const filteredCities = [...new Set(
+      this.talmideiHahamim
+        .filter(r => this.selectedCountries.includes(r.Country))
+        .map(r => r.City)
+        .filter(c => c)
+    )];
+    
+    return filteredCities.sort();
+  }
+
+  getFilteredCountries(): string[] {
+    // If no cities selected, show all countries
+    if (this.selectedCities.length === 0) {
+      return this.countries;
+    }
+    
+    // Filter countries based on selected cities
+    const filteredCountries = [...new Set(
+      this.talmideiHahamim
+        .filter(r => this.selectedCities.includes(r.City))
+        .map(r => r.Country)
+        .filter(c => c)
+    )];
+    
+    return filteredCountries.sort();
+  }
+
   toggleDropdown(dropdown: 'city' | 'country' | 'period') {
     if (dropdown === 'city') {
       this.showCityDropdown = !this.showCityDropdown;
+      if (!this.showCityDropdown) {
+        this.applyFilters();
+      }
     } else if (dropdown === 'country') {
       this.showCountryDropdown = !this.showCountryDropdown;
+      if (!this.showCountryDropdown) {
+        this.applyFilters();
+      }
     } else if (dropdown === 'period') {
       this.showPeriodDropdown = !this.showPeriodDropdown;
+      if (!this.showPeriodDropdown) {
+        this.applyFilters();
+      }
     }
   }
 
@@ -160,10 +207,13 @@ export class AppComponent implements OnInit {
   clearAllFilters(type: 'city' | 'country' | 'period') {
     if (type === 'city') {
       this.selectedCities = [];
+      this.showCityDropdown = false;
     } else if (type === 'country') {
       this.selectedCountries = [];
+      this.showCountryDropdown = false;
     } else if (type === 'period') {
       this.selectedPeriods = [];
+      this.showPeriodDropdown = false;
     }
     this.applyFilters();
   }
@@ -176,16 +226,92 @@ export class AppComponent implements OnInit {
   }
 
   applyFilters() {
+    console.log('Applying filters:', {
+      cities: this.selectedCities,
+      countries: this.selectedCountries,
+      periods: this.selectedPeriods,
+      searchText: this.searchText
+    });
+    
     this.filteredTalmideiHahamim = this.talmideiHahamim.filter(rabbi => {
       const cityMatch = this.selectedCities.length === 0 || this.selectedCities.includes(rabbi.City);
       const countryMatch = this.selectedCountries.length === 0 || this.selectedCountries.includes(rabbi.Country);
       const periodMatch = this.selectedPeriods.length === 0 || this.selectedPeriods.includes(rabbi.Period);
-      return cityMatch && countryMatch && periodMatch;
+      
+      // Search in FullName or HebrewName
+      const searchMatch = !this.searchText || 
+        (rabbi.FullName && rabbi.FullName.toLowerCase().includes(this.searchText.toLowerCase())) ||
+        (rabbi.KnownAS && rabbi.KnownAS.includes(this.searchText));
+      
+      return cityMatch && countryMatch && periodMatch && searchMatch;
     });
+    
+    console.log('Filtered results:', this.filteredTalmideiHahamim.length, 'out of', this.talmideiHahamim.length);
+  }
+
+  onSearchChange() {
+    this.applyFilters();
   }
 
   selectRabbi(rabbi: any) {
     this.selectedRabbi = rabbi;
+    this.loadRabbiStudents(rabbi.RabbiID);
+    this.loadRabbiTeachers(rabbi.RabbiID);
+  }
+
+  selectRabbiById(rabbiId: number) {
+    const rabbi = this.talmideiHahamim.find(r => r.RabbiID === rabbiId);
+    if (rabbi) {
+      // Check if rabbi is in filtered list
+      const rabbiIndex = this.filteredTalmideiHahamim.findIndex(r => r.RabbiID === rabbiId);
+      if (rabbiIndex === -1) {
+        // Rabbi is not in filtered list, clear filters to show all
+        this.selectedCities = [];
+        this.selectedCountries = [];
+        this.selectedPeriods = [];
+        this.searchText = '';
+        this.applyFilters();
+      }
+      
+      // Move the selected rabbi to the top of the filtered list
+      this.filteredTalmideiHahamim = this.filteredTalmideiHahamim.filter(r => r.RabbiID !== rabbiId);
+      this.filteredTalmideiHahamim.unshift(rabbi);
+      
+      // Select the rabbi
+      this.selectRabbi(rabbi);
+    }
+  }
+
+  loadRabbiStudents(rabbiId: number) {
+    this.rabbiStudents = [];
+    this.databaseService.getRabbiStudents(rabbiId).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.rabbiStudents = response.data;
+          console.log('Loaded students:', this.rabbiStudents);
+        }
+      },
+      error: (error) => {
+        console.error('Error loading students:', error);
+        this.rabbiStudents = [];
+      }
+    });
+  }
+
+  loadRabbiTeachers(rabbiId: number) {
+    this.rabbiTeachers = [];
+    this.databaseService.getRabbiTeachers(rabbiId).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.rabbiTeachers = response.data;
+          console.log('Loaded teachers:', this.rabbiTeachers);
+        }
+      },
+      error: (error) => {
+        console.error('Error loading teachers:', error);
+        this.rabbiTeachers = [];
+      }
+    });
   }
 
   sortBy(column: string) {

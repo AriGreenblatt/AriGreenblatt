@@ -12,6 +12,10 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Serve static images from /img directory
+const path = require('path');
+app.use('/img', express.static(path.join(__dirname, '../img')));
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
     res.json({ 
@@ -144,6 +148,90 @@ app.get('/api/tables/:tableName/data', async (req, res) => {
         res.status(500).json({ 
             success: false, 
             message: `Failed to fetch data from table ${req.params.tableName}`,
+            error: error.message 
+        });
+    }
+});
+
+// Get students (talmidim) for a specific rabbi
+app.get('/api/rabbis/:rabbiId/students', async (req, res) => {
+    try {
+        const { rabbiId } = req.params;
+        
+        const query = `
+            SELECT 
+                t.ID,
+                t.RabbiID,
+                t.TeacherID,
+                t.FromYear,
+                t.ToYear,
+                t.Place,
+                t.Notes as StudentNotes,
+                s.FullName as StudentName,
+                s.HebrewName as StudentHebrewName,
+                s.City as StudentCity,
+                s.Country as StudentCountry,
+                s.Period as StudentPeriod,
+                s.YearOfBirth as StudentYearOfBirth,
+                s.YearOfDeath as StudentYearOfDeath
+            FROM Talmidim t
+            INNER JOIN Talmidei_Hahamim s ON t.RabbiID = s.RabbiID
+            WHERE t.TeacherID = @rabbiId
+            ORDER BY s.FullName
+        `;
+        
+        const result = await database.query(query, { rabbiId });
+        res.json({
+            success: true,
+            data: result.recordset,
+            count: result.recordset.length
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            success: false, 
+            message: `Failed to fetch students for rabbi ${req.params.rabbiId}`,
+            error: error.message 
+        });
+    }
+});
+
+// Get teachers (rabbis) for a specific student
+app.get('/api/rabbis/:rabbiId/teachers', async (req, res) => {
+    try {
+        const { rabbiId } = req.params;
+        
+        const query = `
+            SELECT 
+                t.ID,
+                t.RabbiID,
+                t.TeacherID,
+                t.FromYear,
+                t.ToYear,
+                t.Place,
+                t.Notes as TeacherNotes,
+                s.FullName as TeacherName,
+                s.HebrewName as TeacherHebrewName,
+                s.City as TeacherCity,
+                s.Country as TeacherCountry,
+                s.Period as TeacherPeriod,
+                s.YearOfBirth as TeacherYearOfBirth,
+                s.YearOfDeath as TeacherYearOfDeath
+            FROM Talmidim t
+            INNER JOIN Talmidei_Hahamim s ON t.TeacherID = s.RabbiID
+            WHERE t.RabbiID = @rabbiId
+            ORDER BY s.FullName
+        `;
+        
+        const result = await database.query(query, { rabbiId });
+        res.json({
+            success: true,
+            data: result.recordset,
+            count: result.recordset.length
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            success: false, 
+            message: `Failed to fetch teachers for rabbi ${req.params.rabbiId}`,
             error: error.message 
         });
     }

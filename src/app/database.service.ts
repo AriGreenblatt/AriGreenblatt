@@ -73,6 +73,20 @@ export class DatabaseService {
   }
 
   /**
+   * Get students (talmidim) for a specific rabbi
+   */
+  getRabbiStudents(rabbiId: number): Observable<ApiResponse<any[]>> {
+    return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/rabbis/${rabbiId}/students`);
+  }
+
+  /**
+   * Get teachers (rabbis) for a specific student
+   */
+  getRabbiTeachers(rabbiId: number): Observable<ApiResponse<any[]>> {
+    return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/rabbis/${rabbiId}/teachers`);
+  }
+
+  /**
    * Execute a custom SQL query
    * BE CAREFUL: This allows arbitrary SQL execution
    */

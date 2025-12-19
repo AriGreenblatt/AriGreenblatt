@@ -26,6 +26,13 @@ export class AppComponent implements OnInit {
   sortColumn: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
   
+  // Current view
+  currentView: 'rabbis' | 'talmidim' = 'rabbis';
+  
+  // Talmidim data
+  talmidim: any[] = [];
+  filteredTalmidim: any[] = [];
+  
   // Filter options
   cities: string[] = [];
   countries: string[] = [];
@@ -41,6 +48,20 @@ export class AppComponent implements OnInit {
   showCityDropdown: boolean = false;
   showCountryDropdown: boolean = false;
   showPeriodDropdown: boolean = false;
+
+  // New rabbi form
+  isAddingNew: boolean = false;
+  newRabbi: any = {};
+  
+  // Edit existing rabbi
+  editingRabbiId: number | null = null;
+  editingRabbi: any = {};
+  
+  // Talmidim management
+  isAddingNewTalmid: boolean = false;
+  newTalmid: any = {};
+  editingTalmidId: number | null = null;
+  editingTalmid: any = {};
 
   constructor(
     private databaseService: DatabaseService,
@@ -342,5 +363,206 @@ export class AppComponent implements OnInit {
       }
       return 0;
     });
+  }
+
+  startAddingNew() {
+    this.isAddingNew = true;
+    this.newRabbi = {
+      FullName: '',
+      HebrewName: '',
+      knownAs: '',
+      City: '',
+      Country: '',
+      Period: '',
+      YearOfBirth: null,
+      YearOfDeath: null,
+      YoBHebrew: '',
+      YoPHebrew: '',
+      PlaceOfBirth: '',
+      PlaceOfPtira: '',
+      KnownFor: '',
+      Notes: '',
+      Sources: '',
+      ImageUrl: '',
+      URL: '',
+      HebDob: null,
+      HebDoP: null,
+      HebCharDob: '',
+      HebCharDoP: ''
+    };
+  }
+
+  cancelAddNew() {
+    this.isAddingNew = false;
+    this.newRabbi = {};
+  }
+
+  saveNewRabbi() {
+    if (!this.newRabbi.FullName) {
+      alert('אנא מלא לפחות שם מלא');
+      return;
+    }
+
+    this.databaseService.createRabbi(this.newRabbi).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.isAddingNew = false;
+          this.newRabbi = {};
+          this.loadTalmideiHahamim(); // Reload the list
+        } else {
+          alert('שגיאה בהוספה: ' + response.message);
+        }
+      },
+      error: (error) => {
+        alert('שגיאה בהוספה: ' + error.message);
+      }
+    });
+  }
+
+  startEditing(rabbi: any) {
+    this.editingRabbiId = rabbi.RabbiID;
+    this.editingRabbi = { ...rabbi }; // Create a copy
+  }
+
+  cancelEdit() {
+    this.editingRabbiId = null;
+    this.editingRabbi = {};
+  }
+
+  saveEdit() {
+    if (!this.editingRabbi.FullName) {
+      alert('אנא מלא לפחות שם מלא');
+      return;
+    }
+
+    // Create a copy without RabbiID since it's a primary key and shouldn't be updated
+    const { RabbiID, ...rabbiData } = this.editingRabbi;
+
+    this.databaseService.updateRabbi(this.editingRabbiId!, rabbiData).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.editingRabbiId = null;
+          this.editingRabbi = {};
+          this.loadTalmideiHahamim(); // Reload the list
+        } else {
+          alert('שגיאה בעדכון: ' + response.message);
+        }
+      },
+      error: (error) => {
+        alert('שגיאה בעדכון: ' + error.message);
+      }
+    });
+  }
+
+  isEditing(rabbi: any): boolean {
+    return this.editingRabbiId === rabbi.RabbiID;
+  }
+
+  // View switching
+  switchView(view: 'rabbis' | 'talmidim') {
+    this.currentView = view;
+    if (view === 'talmidim' && this.talmidim.length === 0) {
+      this.loadTalmidim();
+    }
+  }
+
+  // Load Talmidim data
+  loadTalmidim() {
+    this.databaseService.getTableData('Talmidim').subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.talmidim = Array.isArray(response.data) ? response.data : response.data.data;
+          this.filteredTalmidim = [...this.talmidim];
+          console.log('Loaded talmidim:', this.talmidim);
+        }
+      },
+      error: (error) => {
+        console.error('Error loading Talmidim:', error);
+        this.error = `Failed to load Talmidim: ${error.message}`;
+      }
+    });
+  }
+
+  // Talmidim CRUD operations
+  startAddingNewTalmid() {
+    this.isAddingNewTalmid = true;
+    this.newTalmid = {
+      RabbiID: null,
+      TeacherID: null,
+      FromYear: null,
+      ToYear: null,
+      Place: '',
+      Notes: ''
+    };
+  }
+
+  cancelAddNewTalmid() {
+    this.isAddingNewTalmid = false;
+    this.newTalmid = {};
+  }
+
+  saveNewTalmid() {
+    if (!this.newTalmid.RabbiID || !this.newTalmid.TeacherID) {
+      alert('אנא בחר תלמיד ומורה');
+      return;
+    }
+
+    this.databaseService.createTalmid(this.newTalmid).subscribe({
+      next: (response) => {
+        if (response.success) {
+          alert('קשר תלמיד-מורה נוסף בהצלחה!');
+          this.isAddingNewTalmid = false;
+          this.newTalmid = {};
+          this.loadTalmidim();
+        } else {
+          alert('שגיאה בהוספה: ' + response.message);
+        }
+      },
+      error: (error) => {
+        alert('שגיאה בהוספה: ' + error.message);
+      }
+    });
+  }
+
+  startEditingTalmid(talmid: any) {
+    this.editingTalmidId = talmid.ID;
+    this.editingTalmid = { ...talmid };
+  }
+
+  cancelEditTalmid() {
+    this.editingTalmidId = null;
+    this.editingTalmid = {};
+  }
+
+  saveEditTalmid() {
+    if (!this.editingTalmid.RabbiID || !this.editingTalmid.TeacherID) {
+      alert('אנא בחר תלמיד ומורה');
+      return;
+    }
+
+    this.databaseService.updateTalmid(this.editingTalmidId!, this.editingTalmid).subscribe({
+      next: (response) => {
+        if (response.success) {
+          alert('קשר תלמיד-מורה עודכן בהצלחה!');
+          this.editingTalmidId = null;
+          this.editingTalmid = {};
+          this.loadTalmidim();
+        } else {
+          alert('שגיאה בעדכון: ' + response.message);
+        }
+      },
+      error: (error) => {
+        alert('שגיאה בעדכון: ' + error.message);
+      }
+    });
+  }
+
+  isEditingTalmid(talmid: any): boolean {
+    return this.editingTalmidId === talmid.ID;
+  }
+
+  getRabbiName(rabbiId: number): string {
+    const rabbi = this.talmideiHahamim.find(r => r.RabbiID === rabbiId);
+    return rabbi ? rabbi.FullName : `ID: ${rabbiId}`;
   }
 }

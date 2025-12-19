@@ -1,26 +1,42 @@
 <!-- RaboteinuZl Database Interface -->
-<div class="container">
-  <header class="hebrew-header">
-    <h1 class="hebrew-title">{{ title }}</h1>
+<div class="w-full m-0 p-0">
+  <header class="text-center mb-2 p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg shadow-md">
+    <h1 class="text-white text-2xl font-bold m-0" style="direction: rtl; font-family: 'Times New Roman', 'David', 'Narkisim', serif; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">{{ title }}</h1>
   </header>
 
-  <div *ngIf="error" class="error-message">
+  <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mt-4">
     <strong>Error:</strong> {{ error }}
   </div>
 
   <!-- Talmidei Hahamim Table -->
-  <div class="talmidei-section" *ngIf="talmideiHahamim && talmideiHahamim.length > 0">
+  <div class="bg-white shadow-md mt-0" *ngIf="talmideiHahamim && talmideiHahamim.length > 0">
 
-      <div class="content-wrapper">
+      <!-- Search section at the top -->
+      <div class="flex justify-end items-center mb-2.5 mt-2.5">
+        <div class="m-0 max-w-xs" style="direction: rtl;">
+          <div>
+            <input 
+              type="text" 
+              class="w-full max-w-md px-3 py-1 border-2 border-indigo-500 rounded focus:outline-none focus:border-purple-600 focus:shadow-lg text-xs" 
+              [(ngModel)]="searchText" 
+              (ngModelChange)="onSearchChange()"
+              placeholder="חיפוש לפי שם..."
+              dir="rtl"
+              style="text-align: right;">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-start w-full m-0 p-0">
       
       <!-- Table and Details Panel side by side -->
-      <div style="display: flex; gap: 2px; align-items: flex-start;">
-        <!-- Left column: Details Panel and Image stacked -->
-        <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div class="flex gap-5 items-start w-full m-0 p-0">
+        <!-- Left column: Details Panel, CRUD Buttons, and Image stacked -->
+        <div class="flex flex-col gap-2.5 min-w-[280px] max-w-[280px] self-start m-0 p-0 sticky top-2.5 flex-shrink-0">
           <!-- Details Panel -->
-          <div class="details-panel-right" *ngIf="selectedRabbi">
-            <div class="rabbi-details">
-              <h3 style="margin-top: 0;">פרטים נוספים</h3>
+          <div class="w-full bg-gray-100 border border-gray-300 rounded-md p-0 text-sm m-0" style="direction: rtl; text-align: right;" *ngIf="selectedRabbi">
+            <div class="p-3">
+              <h3 class="mt-0">פרטים נוספים</h3>
               <div class="detail-item">
                 <strong>שם:</strong>
                 <p>{{ selectedRabbi.FullName }}</p>
@@ -102,160 +118,219 @@
           </div>
         </div>
         
-        <div *ngIf="!selectedRabbi" class="no-selection-right">
+        <!-- CRUD Buttons - Below Details Panel -->
+        <div *ngIf="selectedRabbi" class="flex gap-2 flex-wrap">
+          <button *ngIf="!isAddingNew && !editingRabbiId" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded cursor-pointer text-sm font-bold" (click)="startAddingNew()">+ הוסף</button>
+          <button *ngIf="selectedRabbi && !isAddingNew && !editingRabbiId" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded cursor-pointer text-sm font-bold" (click)="startEditing(selectedRabbi)">✏️ ערוך</button>
+          <button *ngIf="editingRabbiId" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded cursor-pointer text-sm font-bold" (click)="saveEdit()">💾 שמור</button>
+          <button *ngIf="editingRabbiId || isAddingNew" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded cursor-pointer text-sm font-bold" (click)="cancelEdit()">✖️ בטל</button>
+        </div>
+        
+        <div *ngIf="!selectedRabbi" class="text-center text-gray-600 italic p-5 bg-gray-50 rounded-md" style="direction: rtl;">
           <p>בחר תלמיד חכם מהרשימה לצפייה בפרטים</p>
         </div>
         
-        <!-- Image section below Details Panel -->
-        <div *ngIf="selectedRabbi && selectedRabbi.ImageUrl" class="rabbi-image-header">
-          <img [src]="'http://localhost:3000' + selectedRabbi.ImageUrl.trim()" alt="{{selectedRabbi.FullName}}" />
+        <!-- Image section below CRUD buttons -->
+        <div *ngIf="selectedRabbi && selectedRabbi.ImageUrl" class="w-full text-center mt-2.5 p-0.5 rounded-lg">
+          <img [src]="'http://localhost:3000' + selectedRabbi.ImageUrl.trim()" alt="{{selectedRabbi.FullName}}" class="max-w-full h-auto rounded-lg shadow-md" />
         </div>
         </div>
         
         <!-- Table on the right -->
-        <div style="flex: 1;">
-          <!-- Search section aligned to the right -->
-          <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: 10px;">
-            <div class="filter-section-inline" style="margin: 0; max-width: 300px;">
-              <div class="search-container">
-                <input 
-                  type="text" 
-                  class="search-box" 
-                  [(ngModel)]="searchText" 
-                  (ngModelChange)="onSearchChange()"
-                  placeholder="חיפוש לפי שם..."
-                  dir="rtl">
-              </div>
-            </div>
-          </div>
-          
-          <div class="table-responsive">
-        <table class="data-table">
+        <div class="flex-1 min-w-0">
+          <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-xs" style="direction: rtl; text-align: right; font-size: 0.75rem; font-family: 'Times New Roman', 'David', 'Narkisim', serif;">
           <thead>
-            <tr class="filter-row">
+            <tr class="bg-gray-100">
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
               <th></th>
               <th></th>
               <th>
-                <div class="filter-dropdown">
-                  <button class="filter-btn-compact" (click)="toggleDropdown('period')">
-                    <span *ngIf="selectedPeriods.length > 0" class="filter-badge-compact">{{ selectedPeriods.length }}</span>
-                    <span class="dropdown-arrow">▼</span>
+                <div class="relative inline-block">
+                  <button class="bg-indigo-500 text-white border-none px-2 py-1 rounded cursor-pointer text-xs flex items-center gap-1 min-w-[40px] justify-center hover:bg-indigo-600" (click)="toggleDropdown('period')">
+                    <span *ngIf="selectedPeriods.length > 0" class="bg-white bg-opacity-30 px-1.5 py-0.5 rounded text-[10px] font-bold">{{ selectedPeriods.length }}</span>
+                    <span>▼</span>
                   </button>
-                  <div class="dropdown-menu" *ngIf="showPeriodDropdown">
-                    <div class="dropdown-item show-all" (click)="clearAllFilters('period')">
+                  <div class="absolute z-50 bg-white border border-gray-300 rounded-md shadow-lg min-w-[200px] max-h-96 overflow-y-auto" style="direction: rtl; text-align: right;" *ngIf="showPeriodDropdown">
+                    <div class="px-3 py-2 cursor-pointer hover:bg-indigo-100 font-bold text-indigo-600" (click)="clearAllFilters('period')">
                       הצג כולם
                     </div>
-                    <div class="dropdown-item checkbox-item" *ngFor="let period of periods">
+                    <div class="px-3 py-2 cursor-pointer hover:bg-gray-100 flex justify-between items-center" *ngFor="let period of periods">
                       <span (click)="togglePeriod(period)">{{ period }}</span>
-                      <input type="checkbox" [checked]="isSelected('period', period)" (change)="togglePeriod(period)">
+                      <input type="checkbox" [checked]="isSelected('period', period)" (change)="togglePeriod(period)" class="ml-2">
                     </div>
-                    <div class="dropdown-footer">
-                      <button class="close-dropdown-btn" (click)="toggleDropdown('period')">סגור</button>
+                    <div class="text-center sticky bottom-0 bg-white border-t border-gray-300 p-2">
+                      <button class="bg-indigo-500 text-white border-none px-5 py-1.5 rounded cursor-pointer text-xs font-bold w-4/5 hover:bg-indigo-600" (click)="toggleDropdown('period')">סגור</button>
                     </div>
                   </div>
                 </div>
               </th>
               <th>
-                <div class="filter-dropdown">
-                  <button class="filter-btn-compact" (click)="toggleDropdown('country')">
-                    <span *ngIf="selectedCountries.length > 0" class="filter-badge-compact">{{ selectedCountries.length }}</span>
-                    <span class="dropdown-arrow">▼</span>
+                <div class="relative inline-block">
+                  <button class="bg-indigo-500 text-white border-none px-2 py-1 rounded cursor-pointer text-xs flex items-center gap-1 min-w-[40px] justify-center hover:bg-indigo-600" (click)="toggleDropdown('country')">
+                    <span *ngIf="selectedCountries.length > 0" class="bg-white bg-opacity-30 px-1.5 py-0.5 rounded text-[10px] font-bold">{{ selectedCountries.length }}</span>
+                    <span>▼</span>
                   </button>
-                  <div class="dropdown-menu" *ngIf="showCountryDropdown">
-                    <div class="dropdown-item show-all" (click)="clearAllFilters('country')">
+                  <div class="absolute z-50 bg-white border border-gray-300 rounded-md shadow-lg min-w-[200px] max-h-96 overflow-y-auto" style="direction: rtl; text-align: right;" *ngIf="showCountryDropdown">
+                    <div class="px-3 py-2 cursor-pointer hover:bg-indigo-100 font-bold text-indigo-600" (click)="clearAllFilters('country')">
                       הצג כולם
                     </div>
-                    <div class="dropdown-item checkbox-item" *ngFor="let country of getFilteredCountries()">
+                    <div class="px-3 py-2 cursor-pointer hover:bg-gray-100 flex justify-between items-center" *ngFor="let country of getFilteredCountries()">
                       <span (click)="toggleCountry(country)">{{ country }}</span>
-                      <input type="checkbox" [checked]="isSelected('country', country)" (change)="toggleCountry(country)">
+                      <input type="checkbox" [checked]="isSelected('country', country)" (change)="toggleCountry(country)" class="ml-2">
                     </div>
-                    <div class="dropdown-footer">
-                      <button class="close-dropdown-btn" (click)="toggleDropdown('country')">סגור</button>
+                    <div class="text-center sticky bottom-0 bg-white border-t border-gray-300 p-2">
+                      <button class="bg-indigo-500 text-white border-none px-5 py-1.5 rounded cursor-pointer text-xs font-bold w-4/5 hover:bg-indigo-600" (click)="toggleDropdown('country')">סגור</button>
                     </div>
                   </div>
                 </div>
               </th>
               <th>
-                <div class="filter-dropdown">
-                  <button class="filter-btn-compact" (click)="toggleDropdown('city')">
-                    <span *ngIf="selectedCities.length > 0" class="filter-badge-compact">{{ selectedCities.length }}</span>
-                    <span class="dropdown-arrow">▼</span>
+                <div class="relative inline-block">
+                  <button class="bg-indigo-500 text-white border-none px-2 py-1 rounded cursor-pointer text-xs flex items-center gap-1 min-w-[40px] justify-center hover:bg-indigo-600" (click)="toggleDropdown('city')">
+                    <span *ngIf="selectedCities.length > 0" class="bg-white bg-opacity-30 px-1.5 py-0.5 rounded text-[10px] font-bold">{{ selectedCities.length }}</span>
+                    <span>▼</span>
                   </button>
-                  <div class="dropdown-menu" *ngIf="showCityDropdown">
-                    <div class="dropdown-item show-all" (click)="clearAllFilters('city')">
+                  <div class="absolute z-50 bg-white border border-gray-300 rounded-md shadow-lg min-w-[200px] max-h-96 overflow-y-auto" style="direction: rtl; text-align: right;" *ngIf="showCityDropdown">
+                    <div class="px-3 py-2 cursor-pointer hover:bg-indigo-100 font-bold text-indigo-600" (click)="clearAllFilters('city')">
                       הצג כולם
                     </div>
-                    <div class="dropdown-item checkbox-item" *ngFor="let city of getFilteredCities()">
+                    <div class="px-3 py-2 cursor-pointer hover:bg-gray-100 flex justify-between items-center" *ngFor="let city of getFilteredCities()">
                       <span (click)="toggleCity(city)">{{ city }}</span>
-                      <input type="checkbox" [checked]="isSelected('city', city)" (change)="toggleCity(city)">
+                      <input type="checkbox" [checked]="isSelected('city', city)" (change)="toggleCity(city)" class="ml-2">
                     </div>
-                    <div class="dropdown-footer">
-                      <button class="close-dropdown-btn" (click)="toggleDropdown('city')">סגור</button>
+                    <div class="text-center sticky bottom-0 bg-white border-t border-gray-300 p-2">
+                      <button class="bg-indigo-500 text-white border-none px-5 py-1.5 rounded cursor-pointer text-xs font-bold w-4/5 hover:bg-indigo-600" (click)="toggleDropdown('city')">סגור</button>
                     </div>
                   </div>
                 </div>
               </th>
             </tr>
-            <tr>
-              <th (click)="sortBy('YearOfDeath')" class="sortable">
-                פטירה
-                <span class="sort-icon" *ngIf="sortColumn === 'YearOfDeath'">
-                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
-                </span>
-              </th>
-              <th (click)="sortBy('YearOfBirth')" class="sortable">
-                 לידה
-                <span class="sort-icon" *ngIf="sortColumn === 'YearOfBirth'">
-                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
-                </span>
-              </th>
-              <th (click)="sortBy('Period')" class="sortable">
-                תקופה
-                <span class="sort-icon" *ngIf="sortColumn === 'Period'">
-                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
-                </span>
-              </th>
-              <th (click)="sortBy('Country')" class="sortable">
-                מדינה
-                <span class="sort-icon" *ngIf="sortColumn === 'Country'">
-                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
-                </span>
-              </th>
-              <th (click)="sortBy('City')" class="sortable">
-                עיר
-                <span class="sort-icon" *ngIf="sortColumn === 'City'">
-                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
-                </span>
-              </th>
-              <th (click)="sortBy('KnownAS')" class="sortable">
-                ידוע בשם
-                <span class="sort-icon" *ngIf="sortColumn === 'KnownAS'">
-                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
-                </span>
-              </th>
-              <th (click)="sortBy('FullName')" class="sortable">
+            <tr class="bg-indigo-500 text-white text-xs" style="direction: rtl; text-align: right;">
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('FullName')" style="max-width: 140px; width: 140px;">
                 שם
-                <span class="sort-icon" *ngIf="sortColumn === 'FullName'">
+                <span *ngIf="sortColumn === 'FullName'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('KnownAS')" style="max-width: 100px; width: 100px;">
+                ידוע בשם
+                <span *ngIf="sortColumn === 'KnownAS'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('City')" style="max-width: 80px; width: 80px;">
+                עיר
+                <span *ngIf="sortColumn === 'City'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('Country')" style="max-width: 70px; width: 70px;">
+                מדינה
+                <span *ngIf="sortColumn === 'Country'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('Period')" style="max-width: 70px; width: 70px;">
+                תקופה
+                <span *ngIf="sortColumn === 'Period'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 20px; width: 20px;"></th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('HebDob')" style="max-width: 50px; width: 50px;">
+                לידה עברי
+                <span *ngIf="sortColumn === 'HebDob'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('YearOfBirth')" style="max-width: 45px; width: 45px;">
+                 לידה
+                <span *ngIf="sortColumn === 'YearOfBirth'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('HebDoP')" style="max-width: 50px; width: 50px;">
+                פטירה עברי
+                <span *ngIf="sortColumn === 'HebDoP'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('YearOfDeath')" style="max-width: 45px; width: 45px;">
+                פטירה
+                <span *ngIf="sortColumn === 'YearOfDeath'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('RabbiID')" style="max-width: 50px; width: 50px;">
+                ID
+                <span *ngIf="sortColumn === 'RabbiID'">
                   {{ sortDirection === 'asc' ? '▲' : '▼' }}
                 </span>
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let rabbi of filteredTalmideiHahamim" 
-                (click)="selectRabbi(rabbi)" 
-                [class.selected]="selectedRabbi?.RabbiID === rabbi.RabbiID">
-              <td>{{ rabbi.YearOfDeath }}</td>
-              <td>{{ rabbi.YearOfBirth }}</td>
-              <td>{{ rabbi.Period }}</td>
-              <td>{{ rabbi.Country }}</td>
-              <td>{{ rabbi.City }}</td>
-              <td class="hebrew-text">{{ rabbi.knownAs }}</td>
-              <td>
-                <a [href]="'https://he.wikipedia.org/wiki/' + rabbi.FullName" target="_blank" class="rabbi-link">
-                  {{ rabbi.FullName }}
-                </a>
+            <!-- Add New Row -->
+            <tr *ngIf="isAddingNew" class="bg-yellow-50">
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 140px; width: 140px;"><input type="text" [(ngModel)]="newRabbi.FullName" placeholder="שם מלא *" dir="rtl" required class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 100px; width: 100px;"><input type="text" [(ngModel)]="newRabbi.knownAs" placeholder="ידוע בשם" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 80px; width: 80px;"><input type="text" [(ngModel)]="newRabbi.City" placeholder="עיר" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 70px; width: 70px;"><input type="text" [(ngModel)]="newRabbi.Country" placeholder="מדינה" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 70px; width: 70px;"><input type="text" [(ngModel)]="newRabbi.Period" placeholder="תקופה" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 20px; width: 20px;"><input type="number" [(ngModel)]="newRabbi.Approx" placeholder="1" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 50px; width: 50px;"><input type="number" [(ngModel)]="newRabbi.HebDob" placeholder="שנה עברית" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 45px; width: 45px;"><input type="number" [(ngModel)]="newRabbi.YearOfBirth" placeholder="שנה" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 50px; width: 50px;"><input type="number" [(ngModel)]="newRabbi.HebDoP" placeholder="שנה עברית" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 45px; width: 45px;"><input type="number" [(ngModel)]="newRabbi.YearOfDeath" placeholder="שנה" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 50px; width: 50px;"><input type="number" [(ngModel)]="newRabbi.RabbiID" placeholder="ID" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+            </tr>
+            <!-- Add New Button Row -->
+            <tr *ngIf="!isAddingNew" class="bg-gray-50">
+              <td colspan="10" class="text-center py-2">
+                <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded cursor-pointer font-bold" (click)="startAddingNew()">+ הוסף תלמיד חכם חדש</button>
               </td>
+            </tr>
+            <!-- Data Rows -->
+            <tr *ngFor="let rabbi of filteredTalmideiHahamim" 
+                [class.bg-blue-100]="selectedRabbi?.RabbiID === rabbi.RabbiID"
+                [class.bg-yellow-50]="isEditing(rabbi)"
+                class="hover:bg-gray-50 cursor-pointer">
+              <!-- Edit Mode -->
+              <ng-container *ngIf="isEditing(rabbi)">
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 140px; width: 140px;"><input type="text" [(ngModel)]="editingRabbi.FullName" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 100px; width: 100px;"><input type="text" [(ngModel)]="editingRabbi.knownAs" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 80px; width: 80px;"><input type="text" [(ngModel)]="editingRabbi.City" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 70px; width: 70px;"><input type="text" [(ngModel)]="editingRabbi.Country" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 70px; width: 70px;"><input type="text" [(ngModel)]="editingRabbi.Period" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 20px; width: 20px;"><input type="number" [(ngModel)]="editingRabbi.Approx" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 50px; width: 50px;"><input type="number" [(ngModel)]="editingRabbi.HebDob" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 45px; width: 45px;"><input type="number" [(ngModel)]="editingRabbi.YearOfBirth" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 50px; width: 50px;"><input type="number" [(ngModel)]="editingRabbi.HebDoP" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 45px; width: 45px;"><input type="number" [(ngModel)]="editingRabbi.YearOfDeath" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 50px; width: 50px;"><input type="number" [(ngModel)]="editingRabbi.RabbiID" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              </ng-container>
+              <!-- View Mode -->
+              <ng-container *ngIf="!isEditing(rabbi)">
+                <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 140px; width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  <a [href]="'https://he.wikipedia.org/wiki/' + rabbi.FullName" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                    {{ rabbi.FullName }}
+                  </a>
+                </td>
+                <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 100px; width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: 'Times New Roman', 'David', 'Narkisim', serif;">{{ rabbi.knownAs }}</td>
+                <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 80px; width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ rabbi.City }}</td>
+                <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 70px; width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ rabbi.Country }}</td>
+                <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 70px; width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ rabbi.Period }}</td>
+                <td class="px-1 py-0.5 border border-gray-300 text-center" (click)="selectRabbi(rabbi)" style="max-width: 20px; width: 20px;">{{ rabbi.Approx == 1 ? '*' : '' }}</td>
+                <td class="px-1 py-0.5 border border-gray-300 text-center" (click)="selectRabbi(rabbi)" style="max-width: 50px; width: 50px;">{{ rabbi.HebDob }}</td>
+                <td class="px-1 py-0.5 border border-gray-300 text-center" (click)="selectRabbi(rabbi)" style="max-width: 45px; width: 45px;">{{ rabbi.YearOfBirth }}</td>
+                <td class="px-1 py-0.5 border border-gray-300 text-center" (click)="selectRabbi(rabbi)" style="max-width: 50px; width: 50px;">{{ rabbi.HebDoP }}</td>
+                <td class="px-1 py-0.5 border border-gray-300 text-center" (click)="selectRabbi(rabbi)" style="max-width: 45px; width: 45px;">{{ rabbi.YearOfDeath }}</td>
+                <td class="px-1 py-0.5 border border-gray-300 text-center" (click)="selectRabbi(rabbi)" style="max-width: 50px; width: 50px;">{{ rabbi.RabbiID }}</td>
+              </ng-container>
             </tr>
           </tbody>
         </table>
@@ -269,852 +344,59 @@
 </div>
 
 <style>
-.data-table th:nth-child(7),
-.data-table td:nth-child(7) {
-  width: 10px;
-  max-width: 40px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
+/* Minimal custom styles - everything else handled by Tailwind */
 
-.hebrew-header {
-  text-align: center;
-  margin-bottom: 5px;
-  padding: 5px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.hebrew-title {
-  color: white;
-  margin: 0;
-  font-size: 1.5em;
-  font-weight: bold;
-  direction: rtl;
-  text-align: center;
-  font-family: 'Times New Roman', 'David', 'Narkisim', serif;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-  line-height: 1.2;
-}
-
-.database-info {
-  color: rgba(255,255,255,0.9);
-  font-size: 1.1em;
-  margin: 0;
-}
-
-.database-section {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-bottom: 20px;
-}
-
-.connection-status {
-  padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 15px;
-  font-weight: bold;
-}
-
-.status-success {
-  background-color: #d4edda;
-  border: 1px solid #c3e6cb;
-  color: #155724;
-}
-
-.status-error {
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  color: #721c24;
-}
-
-.status-pending {
-  background-color: #fff3cd;
-  border: 1px solid #ffeaa7;
-  color: #856404;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #0056b3;
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  margin-right: 10px;
-}
-
-.btn-secondary:hover {
-  background-color: #545b62;
-}
-
-.error-message {
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  color: #721c24;
-  padding: 15px;
-  border-radius: 6px;
-  margin-top: 15px;
-}
-
-.tables-section {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.tables-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  margin-top: 15px;
-}
-
-.table-card {
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  padding: 15px;
-  background-color: #f8f9fa;
-}
-
-.table-card h3 {
-  margin-top: 0;
-  color: #495057;
-}
-
-.table-card p {
-  margin: 5px 0;
-  color: #6c757d;
-}
-
-.table-actions {
-  margin-top: 15px;
-}
-
-.no-tables {
-  text-align: center;
-  padding: 40px;
-  color: #6c757d;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.talmidei-section {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-top: 20px;
-  overflow: visible;
-}
-
-.filter-section {
-  margin-bottom: 10px;
-  padding: 10px;
-  background-color: #f8f9fa;
-  border-radius: 6px;
-  direction: rtl;
-}
-
-.filter-section-inline {
-  flex: 0 0 auto;
-  padding: 0;
-  background-color: transparent;
-  border-radius: 6px;
-  direction: rtl;
-  max-width: 300px;
-  margin-top: 10px;
-}
-
-.search-container {
-  margin-bottom: 0;
-}
-
-.search-box {
-  width: 100%;
-  max-width: 400px;
-  padding: 6px 15px;
-  border: 2px solid #667eea;
-  border-radius: 5px;
-  font-size: 14px;
-  direction: rtl;
-  text-align: right;
-  font-family: Arial, sans-serif;
-}
-
-.search-box:focus {
-  outline: none;
-  border-color: #764ba2;
-  box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
-}
-
-.search-box::placeholder {
-  color: #999;
-  font-style: italic;
-}
-
-.filter-button-group {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-
-.filter-btn-compact {
-  background-color: #667eea;
-  color: white;
-  border: none;
-  padding: 4px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  min-width: 40px;
-  justify-content: center;
-}
-
-.filter-btn-compact:hover {
-  background-color: #5568d3;
-}
-
-.filter-badge-compact {
-  background-color: rgba(255,255,255,0.3);
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 10px;
-  font-weight: bold;
-}
-
-.filter-dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.filter-btn {
-  background-color: #667eea;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 120px;
-  justify-content: space-between;
-}
-
-.filter-btn:hover {
-  background-color: #5568d3;
-}
-
-.filter-badge {
-  background-color: rgba(255,255,255,0.3);
-  padding: 2px 8px;
-  border-radius: 3px;
-  font-size: 12px;
-}
-
-.dropdown-arrow {
-  font-size: 10px;
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: white;
-  border: 1px solid #dee2e6;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  max-height: 300px;
-  overflow-y: auto;
-  z-index: 10000;
-  min-width: auto;
-  width: max-content;
-  margin-top: 5px;
-}
-
-.dropdown-item {
-  padding: 6px 8px;
-  cursor: pointer;
-  border-bottom: 1px solid #f0f0f0;
-  text-align: right;
-  color: #333;
-  background-color: white;
-  white-space: nowrap;
-}
-
-.dropdown-item:hover {
-  background-color: #e9ecef;
-  color: #000;
-}
-
-.dropdown-item:last-child {
-  border-bottom: none;
-}
-
-.dropdown-item.show-all {
-  font-weight: bold;
-  background-color: #f0f0f0;
-  color: #667eea;
-}
-
-.dropdown-item.show-all:hover {
-  background-color: #e0e0e0;
-}
-
-.dropdown-item.checkbox-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: default;
-  direction: rtl;
-}
-
-.dropdown-item.checkbox-item input[type="checkbox"] {
-  margin: 0;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.dropdown-item.checkbox-item span {
-  color: #333;
-  cursor: pointer;
-  white-space: nowrap;
-  text-align: right;
-  flex: 1;
-}
-
-.dropdown-footer {
-  padding: 8px;
-  border-top: 2px solid #dee2e6;
-  background-color: #f8f9fa;
-  text-align: center;
-  position: sticky;
-  bottom: 0;
-}
-
-.close-dropdown-btn {
-  background-color: #667eea;
-  color: white;
-  border: none;
-  padding: 6px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: bold;
-  width: 80%;
-}
-
-.close-dropdown-btn:hover {
-  background-color: #5568d3;
-}
-
-.clear-filter {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  background-color: rgba(255,255,255,0.3);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-
-.clear-filter:hover {
-  background-color: rgba(255,255,255,0.5);
-}
-
-.results-count {
-  text-align: right;
-  color: #6c757d;
-  font-size: 14px;
-  margin-top: 10px;
-}
-
-.talmidei-section h2 {
-  direction: rtl;
-  text-align: right;
-  color: #495057;
-  margin-bottom: 20px;
-  font-family: 'Times New Roman', 'David', 'Narkisim', serif;
-}
-
-.content-wrapper {
-  display: block;
-  width: 100%;
-  position: relative;
-  margin-top: -40px;
-}
-
-.details-panel {
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  padding: 8px;
-  direction: rtl;
-  text-align: right;
-  font-size: 0.75em;
-}
-
-.details-panel-right {
-  width: 400px;
-  min-width: 400px;
-  max-width: 400px;
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  padding: 0;
-  direction: rtl;
-  text-align: right;
-  font-size: 0.85em;
-  margin-top: 15px;
-  margin-right: -80px;
-  margin-left: 190px;
-}
-
-.details-panel-right .rabbi-details {
-  padding: 12px;
-  padding-left: 40px;
-}
-
-.rabbi-image-header {
-  width: 400px;
-  text-align: center;
-  margin: 10px 0 0 190px;
-  margin-right: -80px;
-  padding: 1px;
-  border-radius: 8px;
-}
-
-.rabbi-image-header img {
-  width: 100%;
-  max-width: 400px;
-  height: auto;
-  border-radius: 3px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-.rabbi-image-top {
-  text-align: center;
-  margin-bottom: 20px;
-  padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.rabbi-image-top img {
-  max-width: 300px;
-  max-height: 300px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-.no-selection-right {
-  flex: 0 0 400px;
-  text-align: center;
-  color: #6c757d;
-  padding: 40px 20px;
-  font-style: italic;
-}
-
-.details-panel::-webkit-scrollbar {
-  display: none;
-}
-
-.rabbi-details h3 {
-  margin-top: 0;
-  color: #495057;
-  border-bottom: 2px solid #667eea;
-  padding-bottom: 5px;
-  margin-bottom: 8px;
-  font-size: 1.1em;
-}
-
-.detail-item {
-  margin-bottom: 6px;
-}
-
-.detail-item strong {
-  display: block;
-  color: #667eea;
-  margin-bottom: 2px;
-  font-size: 0.95em;
-}
-
-.detail-item p {
-  margin: 0;
-  color: #495057;
-  line-height: 1.3;
-}
-
-.no-selection {
-  text-align: center;
-  color: #6c757d;
-  padding: 40px 20px;
-}
-
-.students-section {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 2px solid #dee2e6;
-}
-
-
-.students-section h3 {
-  color: #495057;
-  border-bottom: 2px solid #667eea;
-  padding-bottom: 2px;
-  margin-bottom: 4px;
-  font-size: 1.1em;
-}
-
-.students-table {
+/* Keep teacher/student tables styled */
+.teachers-table, .students-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9em;
+  margin-top: 10px;
 }
 
+.teachers-table th,
+.teachers-table td,
 .students-table th,
 .students-table td {
-  padding: 2px 6px;
+  padding: 8px;
   text-align: right;
   border: 1px solid #dee2e6;
-}
-
-.students-table thead {
-  background-color: #667eea;
-  color: white;
-}
-
-.students-table tbody tr:nth-child(even) {
-  background-color: #f8f9fa;
-}
-
-.students-table tbody tr:hover {
-  background-color: #e9ecef;
-}
-
-.table-responsive {
-  flex: 1;
-  overflow-x: auto;
-  overflow-y: visible;
-  text-align: right;
-  margin-top: -45px;
-  position: relative;
-  z-index: 2;
-  clear: both;
-}
-
-.data-table {
-  position: relative;
-  overflow: visible;
-  max-width: 400px;
-  width: 100%;
-  margin-right: 0;
-  margin-left: auto;
-}
-
-.data-table thead {
-  position: relative;
-}
-
-.data-table thead tr.filter-row th {
-  position: relative;
-  overflow: visible;
-}
-
-.data-table tbody {
-  position: relative;
-}
-
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-.data-table thead {
-  background-color: #667eea;
-  color: white;
-}
-
-.data-table thead tr.filter-row {
-  background-color: #f8f9fa;
-}
-
-.data-table thead tr.filter-row th {
-  padding: 5px;
-  border-bottom: 2px solid #667eea;
-}
-
-.data-table th {
-  user-select: none;
-}
-
-.data-table th.sortable {
-  cursor: pointer;
-  position: relative;
-  padding-left: 25px;
-}
-
-.data-table th.sortable:hover {
-  background-color: #5568d3;
-}
-
-.sort-icon {
-  margin-right: 5px;
-  font-size: 0.8em;
-}
-
-.data-table {
-  text-align: right;
-}
-.data-table th,
-.data-table td {
-  padding: 6px 10px;
-  text-align: right;
-  border: 1px solid #dee2e6;
-  font-family: Arial, sans-serif;
-  font-size: 0.85em;
-  white-space: nowrap;
-}
-/* Make מדינה and שם columns narrower in the main table */
-.data-table th:nth-child(1), /* שנת פטירה */
-.data-table td:nth-child(1) {
-  max-width: 50px;
-  width: 50px;
-  padding-left: 4px;
-  padding-right: 4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-/* Make מדינה and שם columns narrower in the main table */
-.data-table th:nth-child(2), /* שנת לידה*/
-.data-table td:nth-child(2) {
-  max-width: 50px;
-  width: 50px;
-  padding-left: 4px;
-  padding-right: 4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Make מדינה and שם columns narrower in the main table */
-.data-table th:nth-child(3), /* שנת לידה*/
-.data-table td:nth-child(3) {
-  max-width: 90px;
-  width: 90px;
-  padding-left: 4px;
-  padding-right: 4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Make מדינה and שם columns narrower in the main table */
-.data-table th:nth-child(4), /* מדינה */
-.data-table td:nth-child(4) {
-  max-width: 60px;
-  width: 60px;
-  padding-left: 4px;
-  padding-right: 4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.data-table th:nth-child(5), /* עיר */
-.data-table td:nth-child(5) {
-  max-width: 70px;
-  width: 70px;
-  padding-left: 4px;
-  padding-right: 4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.data-table td:nth-child(6) {
-  max-width: 100px;
-  width: 100px;
-  padding-left: 4px;
-  padding-right: 4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.data-table th:nth-child(7), /* שם */
-.data-table td:nth-child(7) {
-  max-width: 150px;
-  width: 150px;
-  padding-left: 4px;
-  padding-right: 4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.data-table tbody tr:nth-child(even) {
-  background-color: #f8f9fa;
-}
-
-.data-table tbody tr:hover {
-  background-color: #e9ecef;
-  cursor: pointer;
-}
-
-.data-table tbody tr.selected {
-  background-color: #cfe2ff;
-  border-left: 3px solid #667eea;
-}
-
-.hebrew-text {
-  direction: rtl;
-}
-
-.rabbi-link {
-  color: #667eea;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.rabbi-link:hover {
-  color: #764ba2;
-  text-decoration: underline;
-}
-
-.student-link {
-  color: #667eea;
-  text-decoration: none;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.student-link:hover {
-  color: #764ba2;
-  text-decoration: underline;
-}
-
-.teachers-section {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 2px solid #dee2e6;
-}
-
-.teachers-section h3 {
-  color: #495057;
-  border-bottom: 2px solid #667eea;
-  padding-bottom: 2px;
-  margin-bottom: 4px;
-  font-size: 1.1em;
 }
 
 .teachers-table th,
 .students-table th {
-  padding: 2px 6px;
-  text-align: right;
-  border: 1px solid #dee2e6;
-  font-size: 0.9em;
-}
-
-.teachers-table td {
-  padding: 4px 6px;
-  text-align: right;
-  border: 1px solid #dee2e6;
-}
-
-.teachers-table thead {
   background-color: #667eea;
   color: white;
+  font-weight: bold;
 }
 
-.teachers-table tbody tr:nth-child(even) {
+.teachers-table tr:nth-child(even),
+.students-table tr:nth-child(even) {
   background-color: #f8f9fa;
 }
 
-.teachers-table tbody tr:hover {
-  background-color: #e9ecef;
-}
-
-.teacher-link {
+.teachers-table a,
+.students-table a {
   color: #667eea;
   text-decoration: none;
-  font-weight: 500;
-  cursor: pointer;
 }
 
-.teacher-link:hover {
-  color: #764ba2;
+.teachers-table a:hover,
+.students-table a:hover {
   text-decoration: underline;
 }
 
-.rabbi-image-side {
-  flex: 0 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 16px;
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-  max-width: 350px;
+.detail-item {
+  margin-bottom: 12px;
 }
 
-.rabbi-image-side img {
-  max-width: 100%;
-  height: auto;
-  max-height: 400px;
-  border-radius: 8px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-  background: #fff;
-  border: 4px solid #fff;
+.detail-item strong {
   display: block;
+  color: #495057;
+  margin-bottom: 4px;
+}
+
+.detail-item p {
+  margin: 0;
+  color: #212529;
 }
 </style>

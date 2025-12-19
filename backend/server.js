@@ -237,6 +237,167 @@ app.get('/api/rabbis/:rabbiId/teachers', async (req, res) => {
     }
 });
 
+// Create a new rabbi
+app.post('/api/rabbis', async (req, res) => {
+    try {
+        const rabbi = req.body;
+        
+        const query = `
+            INSERT INTO dbo.Talmidei_Hahamim (
+                FullName, HebrewName, knownAs, City, Country, Period,
+                YearOfBirth, YearOfDeath, YoBHebrew, YoPHebrew,
+                PlaceOfBirth, PlaceOfPtira, KnownFor, Notes, Sources,
+                ImageUrl, URL, HebDob, HebDoP, HebCharDob, HebCharDoP
+            ) VALUES (
+                @FullName, @HebrewName, @knownAs, @City, @Country, @Period,
+                @YearOfBirth, @YearOfDeath, @YoBHebrew, @YoPHebrew,
+                @PlaceOfBirth, @PlaceOfPtira, @KnownFor, @Notes, @Sources,
+                @ImageUrl, @URL, @HebDob, @HebDoP, @HebCharDob, @HebCharDoP
+            );
+            SELECT SCOPE_IDENTITY() AS RabbiID;
+        `;
+        
+        const result = await database.query(query, rabbi);
+        const newRabbiId = result.recordset[0].RabbiID;
+        
+        res.json({
+            success: true,
+            message: 'Rabbi created successfully',
+            data: { RabbiID: newRabbiId, ...rabbi }
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to create rabbi',
+            error: error.message 
+        });
+    }
+});
+
+// Update an existing rabbi
+app.put('/api/rabbis/:rabbiId', async (req, res) => {
+    try {
+        const { rabbiId } = req.params;
+        const rabbi = req.body;
+        
+        console.log('Updating rabbi:', rabbiId);
+        console.log('Update data:', rabbi);
+        
+        // Build dynamic SET clause based on provided fields
+        const updateFields = [];
+        const params = { RabbiID: rabbiId };
+        
+        const allowedFields = [
+            'FullName', 'HebrewName', 'knownAs', 'City', 'Country', 'Period',
+            'YearOfBirth', 'YearOfDeath', 'YoBHebrew', 'YoPHebrew',
+            'PlaceOfBirth', 'PlaceOfPtira', 'KnownFor', 'Notes', 'Sources',
+            'ImageUrl', 'URL', 'HebDob', 'HebDoP', 'HebCharDob', 'HebCharDoP', 'Approx'
+        ];
+        
+        allowedFields.forEach(field => {
+            if (rabbi.hasOwnProperty(field)) {
+                updateFields.push(`${field} = @${field}`);
+                params[field] = rabbi[field];
+            }
+        });
+        
+        if (updateFields.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'No fields to update'
+            });
+        }
+        
+        const query = `
+            UPDATE dbo.Talmidei_Hahamim SET
+                ${updateFields.join(',\n                ')}
+            WHERE RabbiID = @RabbiID;
+        `;
+        
+        console.log('Generated query:', query);
+        console.log('Parameters:', params);
+        
+        const result = await database.query(query, params);
+        
+        res.json({
+            success: true,
+            message: 'Rabbi updated successfully',
+            data: { RabbiID: rabbiId, ...rabbi }
+        });
+    } catch (error) {
+        console.error('Error updating rabbi:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to update rabbi',
+            error: error.message 
+        });
+    }
+});
+
+// Create a new talmid (student-teacher relationship)
+app.post('/api/talmidim', async (req, res) => {
+    try {
+        const talmid = req.body;
+        
+        const query = `
+            INSERT INTO dbo.Talmidim (
+                RabbiID, TeacherID, FromYear, ToYear, Place, Notes
+            ) VALUES (
+                @RabbiID, @TeacherID, @FromYear, @ToYear, @Place, @Notes
+            );
+            SELECT SCOPE_IDENTITY() AS ID;
+        `;
+        
+        const result = await database.query(query, talmid);
+        const newTalmidId = result.recordset[0].ID;
+        
+        res.json({
+            success: true,
+            message: 'Talmid relationship created successfully',
+            data: { ID: newTalmidId, ...talmid }
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to create talmid relationship',
+            error: error.message 
+        });
+    }
+});
+
+// Update an existing talmid (student-teacher relationship)
+app.put('/api/talmidim/:talmidId', async (req, res) => {
+    try {
+        const { talmidId } = req.params;
+        const talmid = req.body;
+        
+        const query = `
+            UPDATE dbo.Talmidim SET
+                RabbiID = @RabbiID,
+                TeacherID = @TeacherID,
+                FromYear = @FromYear,
+                ToYear = @ToYear,
+                Place = @Place,
+                Notes = @Notes
+            WHERE ID = @ID;
+        `;
+        
+        const result = await database.query(query, { ...talmid, ID: talmidId });
+        
+        res.json({
+            success: true,
+            message: 'Talmid relationship updated successfully',
+            data: { ID: talmidId, ...talmid }
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to update talmid relationship',
+            error: error.message 
+        });
+    }
+});
+
 // Execute custom SQL query (be careful with this in production)
 app.post('/api/query', async (req, res) => {
     try {

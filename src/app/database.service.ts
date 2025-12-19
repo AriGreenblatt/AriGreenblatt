@@ -87,6 +87,34 @@ export class DatabaseService {
   }
 
   /**
+   * Create a new rabbi
+   */
+  createRabbi(rabbi: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/rabbis`, rabbi, this.httpOptions);
+  }
+
+  /**
+   * Update an existing rabbi
+   */
+  updateRabbi(rabbiId: number, rabbi: any): Observable<ApiResponse<any>> {
+    return this.http.put<ApiResponse<any>>(`${this.apiUrl}/rabbis/${rabbiId}`, rabbi, this.httpOptions);
+  }
+
+  /**
+   * Create a new talmid (student-teacher relationship)
+   */
+  createTalmid(talmid: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/talmidim`, talmid, this.httpOptions);
+  }
+
+  /**
+   * Update an existing talmid (student-teacher relationship)
+   */
+  updateTalmid(talmidId: number, talmid: any): Observable<ApiResponse<any>> {
+    return this.http.put<ApiResponse<any>>(`${this.apiUrl}/talmidim/${talmidId}`, talmid, this.httpOptions);
+  }
+
+  /**
    * Execute a custom SQL query
    * BE CAREFUL: This allows arbitrary SQL execution
    */

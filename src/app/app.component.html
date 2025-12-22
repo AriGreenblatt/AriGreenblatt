@@ -36,12 +36,15 @@
             <div style="padding: 6px 8px;">
               <h3 style="margin: 0 0 4px 0; font-size: 12px;">פרטים נוספים</h3>
               <div style="margin-bottom: 2px;"><strong>שם:</strong> {{ selectedRabbi.FullName }}</div>
-              <div style="margin-bottom: 2px;"><strong>שם עברי:</strong> {{ selectedRabbi.HebrewName }}</div>
-              <div style="margin-bottom: 2px;"><strong>ידוע בשם:</strong> {{ selectedRabbi.KnownFor }}</div>
-              <div style="margin-bottom: 2px;"><strong>מקום לידה:</strong> {{ selectedRabbi.PlaceOfBirth }}</div>
-              <div style="margin-bottom: 2px;"><strong>מקום פטירה:</strong> {{ selectedRabbi.PlaceOfPtira }}</div>
-              <div style="margin-bottom: 2px;"><strong>הערות:</strong> {{ selectedRabbi.Notes }}</div>
-              <div style="margin-bottom: 0;"><strong>מקורות:</strong> {{ selectedRabbi.Sources }}</div>
+              <div style="margin-bottom: 2px;" *ngIf="selectedRabbi.knownAs"><strong>ידוע בשם:</strong> {{ selectedRabbi.knownAs }}</div>
+              <div style="margin-bottom: 2px;" *ngIf="selectedRabbi.KnownFor"><strong>ידוע בגלל:</strong> {{ selectedRabbi.KnownFor }}</div>
+              <div style="margin-bottom: 2px;" *ngIf="selectedRabbi.PlaceOfBirth"><strong>מקום לידה:</strong> {{ selectedRabbi.PlaceOfBirth }}</div>
+              <div style="margin-bottom: 2px;" *ngIf="selectedRabbi.PlaceOfPtira"><strong>מקום פטירה:</strong> {{ selectedRabbi.PlaceOfPtira }}</div>
+              <div style="margin-bottom: 2px;" *ngIf="selectedRabbi.HebCharDob"><strong>תאריך לידה עברי:</strong> {{ selectedRabbi.HebCharDob }}</div>
+              <div style="margin-bottom: 2px;" *ngIf="selectedRabbi.HebCharDoP"><strong>תאריך פטירה עברי:</strong> {{ selectedRabbi.HebCharDoP }}</div>
+              <div style="margin-bottom: 2px;" *ngIf="selectedRabbi.Notes"><strong>הערות:</strong> {{ selectedRabbi.Notes }}</div>
+              <div style="margin-bottom: 2px;" *ngIf="selectedRabbi.Sources"><strong>מקורות:</strong> {{ selectedRabbi.Sources }}</div>
+              <div style="margin-bottom: 0;" *ngIf="selectedRabbi.URL"><strong>קישור:</strong> <a [href]="selectedRabbi.URL" target="_blank" style="color: #4F46E5;">לחץ כאן</a></div>
             </div>
           </div>
         
@@ -60,6 +63,34 @@
         <!-- Image section below CRUD buttons -->
         <div *ngIf="selectedRabbi && selectedRabbi.ImageUrl" class="w-full text-center mt-2.5 p-0.5 rounded-lg">
           <img [src]="'http://localhost:3000' + selectedRabbi.ImageUrl.trim()" alt="{{selectedRabbi.FullName}}" class="max-w-full h-auto rounded-lg shadow-md" />
+        </div>
+        
+        <!-- Talmidim Relationships Table (no header) -->
+        <div *ngIf="selectedRabbi" class="w-full mt-2" style="direction: rtl; text-align: right; font-size: 10px;">
+          <table class="w-full border-collapse" *ngIf="filteredTalmidim.length > 0">
+            <tbody>
+              <ng-container *ngFor="let talmid of filteredTalmidim">
+                <tr *ngIf="talmid.RabbiId == selectedRabbi.RabbiID || talmid.Rabbi2Id == selectedRabbi.RabbiID" 
+                    class="hover:bg-gray-100 border-b border-gray-200">
+                  <td class="py-1 px-1 text-gray-600" style="width: 30%;">
+                    {{ talmid.RelationshipName }}
+                  </td>
+                  <td class="py-1 px-1" style="width: 70%;">
+                    <a *ngIf="talmid.RabbiId == selectedRabbi.RabbiID" 
+                       class="text-blue-600 hover:underline cursor-pointer"
+                       (click)="selectRabbiById(talmid.Rabbi2Id)">
+                      {{ talmid.Rabbi2Name || talmid.Rabbi2KnownAs }}
+                    </a>
+                    <a *ngIf="talmid.Rabbi2Id == selectedRabbi.RabbiID" 
+                       class="text-blue-600 hover:underline cursor-pointer"
+                       (click)="selectRabbiById(talmid.RabbiId)">
+                      {{ talmid.Rabbi1Name || talmid.Rabbi1KnownAs }}
+                    </a>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
         </div>
         </div>
         
@@ -142,9 +173,9 @@
                   {{ sortDirection === 'asc' ? '▲' : '▼' }}
                 </span>
               </th>
-              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('KnownAS')" style="max-width: 100px; width: 100px;">
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('knownAs')" style="max-width: 100px; width: 100px;">
                 ידוע בשם
-                <span *ngIf="sortColumn === 'KnownAS'">
+                <span *ngIf="sortColumn === 'knownAs'">
                   {{ sortDirection === 'asc' ? '▲' : '▼' }}
                 </span>
               </th>
@@ -204,7 +235,7 @@
                 <input type="text" [(ngModel)]="columnFilters['FullName']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
               </th>
               <th class="px-1 py-1 border border-gray-300" style="max-width: 100px; width: 100px;">
-                <input type="text" [(ngModel)]="columnFilters['KnownAS']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+                <input type="text" [(ngModel)]="columnFilters['knownAs']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
               </th>
               <th class="px-1 py-1 border border-gray-300" style="max-width: 80px; width: 80px;">
                 <input type="text" [(ngModel)]="columnFilters['City']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">

@@ -48,7 +48,7 @@ export class AppComponent implements OnInit {
   // Column search filters
   columnFilters: {[key: string]: string} = {
     FullName: '',
-    KnownAS: '',
+    knownAs: '',
     City: '',
     Country: '',
     Period: '',
@@ -87,6 +87,7 @@ export class AppComponent implements OnInit {
     // Only run in browser, not on server
     if (isPlatformBrowser(this.platformId)) {
       this.loadTalmideiHahamim();
+      this.loadTalmidim();
     }
   }
 
@@ -155,6 +156,26 @@ export class AppComponent implements OnInit {
     this.cities = [...new Set(this.talmideiHahamim.map(r => r.City).filter(v => v))].sort();
     this.countries = [...new Set(this.talmideiHahamim.map(r => r.Country).filter(v => v))].sort();
     this.periods = [...new Set(this.talmideiHahamim.map(r => r.Period).filter(v => v))].sort();
+  }
+
+  loadTalmidim() {
+    console.log('Loading Talmidim relationships...');
+    this.databaseService.getTalmidim().subscribe({
+      next: (response) => {
+        console.log('Received talmidim response:', response);
+        if (response.success && response.data) {
+          this.talmidim = Array.isArray(response.data) ? response.data : [];
+          this.filteredTalmidim = [...this.talmidim];
+          console.log('Loaded talmidim:', this.talmidim.length, 'records');
+          console.log('First record:', this.talmidim[0]);
+        } else {
+          console.log('No talmidim data in response');
+        }
+      },
+      error: (error) => {
+        console.error('Error loading Talmidim:', error);
+      }
+    });
   }
 
   getFilteredCities(): string[] {
@@ -275,10 +296,10 @@ export class AppComponent implements OnInit {
       const countryMatch = this.selectedCountries.length === 0 || this.selectedCountries.includes(rabbi.Country);
       const periodMatch = this.selectedPeriods.length === 0 || this.selectedPeriods.includes(rabbi.Period);
       
-      // Search in FullName or HebrewName
+      // Search in FullName or knownAs
       const searchMatch = !this.searchText || 
         (rabbi.FullName && rabbi.FullName.toLowerCase().includes(this.searchText.toLowerCase())) ||
-        (rabbi.KnownAS && rabbi.KnownAS.includes(this.searchText));
+        (rabbi.knownAs && rabbi.knownAs.toLowerCase().includes(this.searchText.toLowerCase()));
       
       // Column-specific filters
       const columnMatch = Object.keys(this.columnFilters).every(col => {
@@ -372,15 +393,12 @@ export class AppComponent implements OnInit {
     this.isAddingNew = true;
     this.newRabbi = {
       FullName: '',
-      HebrewName: '',
       knownAs: '',
       City: '',
       Country: '',
       Period: '',
       YearOfBirth: null,
       YearOfDeath: null,
-      YoBHebrew: '',
-      YoPHebrew: '',
       PlaceOfBirth: '',
       PlaceOfPtira: '',
       KnownFor: '',
@@ -390,6 +408,7 @@ export class AppComponent implements OnInit {
       URL: '',
       HebDob: null,
       HebDoP: null,
+      Approx: false,
       HebCharDob: '',
       HebCharDoP: ''
     };
@@ -467,23 +486,6 @@ export class AppComponent implements OnInit {
     if (view === 'talmidim' && this.talmidim.length === 0) {
       this.loadTalmidim();
     }
-  }
-
-  // Load Talmidim data
-  loadTalmidim() {
-    this.databaseService.getTableData('Talmidim').subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.talmidim = Array.isArray(response.data) ? response.data : response.data.data;
-          this.filteredTalmidim = [...this.talmidim];
-          console.log('Loaded talmidim:', this.talmidim);
-        }
-      },
-      error: (error) => {
-        console.error('Error loading Talmidim:', error);
-        this.error = `Failed to load Talmidim: ${error.message}`;
-      }
-    });
   }
 
   // Talmidim CRUD operations

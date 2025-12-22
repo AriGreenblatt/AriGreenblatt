@@ -160,15 +160,15 @@ app.post('/api/rabbis', async (req, res) => {
         
         const query = `
             INSERT INTO dbo.Talmidei_Hahamim (
-                FullName, HebrewName, knownAs, City, Country, Period,
-                YearOfBirth, YearOfDeath, YoBHebrew, YoPHebrew,
+                FullName, knownAs, City, Country, Period,
+                YearOfBirth, YearOfDeath,
                 PlaceOfBirth, PlaceOfPtira, KnownFor, Notes, Sources,
-                ImageUrl, URL, HebDob, HebDoP, HebCharDob, HebCharDoP
+                ImageUrl, URL, HebDob, HebDoP, Approx, HebCharDob, HebCharDoP
             ) VALUES (
-                @FullName, @HebrewName, @knownAs, @City, @Country, @Period,
-                @YearOfBirth, @YearOfDeath, @YoBHebrew, @YoPHebrew,
+                @FullName, @knownAs, @City, @Country, @Period,
+                @YearOfBirth, @YearOfDeath,
                 @PlaceOfBirth, @PlaceOfPtira, @KnownFor, @Notes, @Sources,
-                @ImageUrl, @URL, @HebDob, @HebDoP, @HebCharDob, @HebCharDoP
+                @ImageUrl, @URL, @HebDob, @HebDoP, @Approx, @HebCharDob, @HebCharDoP
             );
             SELECT SCOPE_IDENTITY() AS RabbiID;
         `;
@@ -204,8 +204,8 @@ app.put('/api/rabbis/:rabbiId', async (req, res) => {
         const params = { RabbiID: rabbiId };
         
         const allowedFields = [
-            'FullName', 'HebrewName', 'knownAs', 'City', 'Country', 'Period',
-            'YearOfBirth', 'YearOfDeath', 'YoBHebrew', 'YoPHebrew',
+            'FullName', 'knownAs', 'City', 'Country', 'Period',
+            'YearOfBirth', 'YearOfDeath',
             'PlaceOfBirth', 'PlaceOfPtira', 'KnownFor', 'Notes', 'Sources',
             'ImageUrl', 'URL', 'HebDob', 'HebDoP', 'HebCharDob', 'HebCharDoP', 'Approx'
         ];
@@ -250,6 +250,47 @@ app.put('/api/rabbis/:rabbiId', async (req, res) => {
     }
 });
 
+// Get all talmidim relationships with joined data
+app.get('/api/talmidim', async (req, res) => {
+    try {
+        const query = `
+            SELECT 
+                t.ID,
+                t.RabbiId,
+                t.Rabbi2Id,
+                t.RelationshipCode,
+                t.FromYear,
+                t.ToYear,
+                t.Place,
+                t.Notes,
+                r1.FullName AS Rabbi1Name,
+                r1.knownAs AS Rabbi1KnownAs,
+                r2.FullName AS Rabbi2Name,
+                r2.knownAs AS Rabbi2KnownAs,
+                rel.RelationshipName
+            FROM dbo.Talmidim t
+            LEFT JOIN dbo.Talmidei_Hahamim r1 ON t.RabbiId = r1.RabbiID
+            LEFT JOIN dbo.Talmidei_Hahamim r2 ON t.Rabbi2Id = r2.RabbiID
+            LEFT JOIN dbo.Relationships rel ON t.RelationshipCode = rel.RelationshipCode
+            ORDER BY r1.FullName, r2.FullName
+        `;
+        
+        const result = await database.query(query);
+        console.log('Talmidim query returned', result.recordset.length, 'rows');
+        res.json({
+            success: true,
+            data: result.recordset
+        });
+    } catch (error) {
+        console.error('Error fetching talmidim:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to fetch talmidim relationships',
+            error: error.message 
+        });
+    }
+});
+
 // Create a new talmid (student-teacher relationship)
 app.post('/api/talmidim', async (req, res) => {
     try {
@@ -257,9 +298,9 @@ app.post('/api/talmidim', async (req, res) => {
         
         const query = `
             INSERT INTO dbo.Talmidim (
-                RabbiID, TeacherID, FromYear, ToYear, Place, Notes
+                RabbiId, Rabbi2Id, RelationshipCode, FromYear, ToYear, Place, Notes
             ) VALUES (
-                @RabbiID, @TeacherID, @FromYear, @ToYear, @Place, @Notes
+                @RabbiId, @Rabbi2Id, @RelationshipCode, @FromYear, @ToYear, @Place, @Notes
             );
             SELECT SCOPE_IDENTITY() AS ID;
         `;
@@ -289,8 +330,9 @@ app.put('/api/talmidim/:talmidId', async (req, res) => {
         
         const query = `
             UPDATE dbo.Talmidim SET
-                RabbiID = @RabbiID,
-                TeacherID = @TeacherID,
+                RabbiId = @RabbiId,
+                Rabbi2Id = @Rabbi2Id,
+                RelationshipCode = @RelationshipCode,
                 FromYear = @FromYear,
                 ToYear = @ToYear,
                 Place = @Place,

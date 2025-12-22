@@ -87,6 +87,13 @@ export class DatabaseService {
   }
 
   /**
+   * Get all talmidim relationships with joined data
+   */
+  getTalmidim(): Observable<ApiResponse<any[]>> {
+    return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/talmidim`, this.httpOptions);
+  }
+
+  /**
    * Create a new talmid (student-teacher relationship)
    */
   createTalmid(talmid: any): Observable<ApiResponse<any>> {

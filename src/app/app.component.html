@@ -27,96 +27,23 @@
         </div>
       </div>
 
-      <div class="flex items-start w-full m-0 p-0">
-      
       <!-- Table and Details Panel side by side -->
-      <div class="flex gap-5 items-start w-full m-0 p-0">
+      <div style="display: flex; flex-direction: row; gap: 20px; align-items: flex-start; width: 100%;">
         <!-- Left column: Details Panel, CRUD Buttons, and Image stacked -->
-        <div class="flex flex-col gap-2.5 min-w-[280px] max-w-[280px] self-start m-0 p-0 sticky top-2.5 flex-shrink-0">
+        <div style="display: flex; flex-direction: column; gap: 5px; min-width: 280px; max-width: 280px; flex-shrink: 0; position: sticky; top: 10px; margin-top: 55px;">
           <!-- Details Panel -->
-          <div class="w-full bg-gray-100 border border-gray-300 rounded-md p-0 text-sm m-0" style="direction: rtl; text-align: right;" *ngIf="selectedRabbi">
-            <div class="p-3">
-              <h3 class="mt-0">פרטים נוספים</h3>
-              <div class="detail-item">
-                <strong>שם:</strong>
-                <p>{{ selectedRabbi.FullName }}</p>
-            </div>
-            <div class="detail-item">
-              <strong>שם עברי:</strong>
-              <p>{{ selectedRabbi.HebrewName }}</p>
-            </div>
-            <div class="detail-item">
-              <strong>ידוע בשם:</strong>
-              <p>{{ selectedRabbi.KnownFor }}</p>
-            </div>
-            <div class="detail-item">
-              <strong>מקום לידה:</strong>
-              <p>{{ selectedRabbi.PlaceOfBirth }}</p>
-            </div>
-            <div class="detail-item">
-              <strong>מקום פטירה:</strong>
-              <p>{{ selectedRabbi.PlaceOfPtira }}</p>
-            </div>
-            <div class="detail-item">
-              <strong>הערות:</strong>
-              <p>{{ selectedRabbi.Notes }}</p>
-            </div>
-            <div class="detail-item">
-              <strong>מקורות:</strong>
-              <p>{{ selectedRabbi.Sources }}</p>
-            </div>
-
-            <!-- Teachers Table -->
-            <div class="teachers-section" *ngIf="rabbiTeachers && rabbiTeachers.length > 0">
-              <h3>רבנים</h3>
-              <table class="teachers-table">
-                <thead>
-                  <tr>
-                    <th>שם</th>
-                    <th> לידה</th>
-                    <th> פטירה</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let teacher of rabbiTeachers">
-                    <td>
-                      <a href="javascript:void(0)" (click)="selectRabbiById(teacher.TeacherID)" class="teacher-link">
-                        {{ teacher.TeacherName }}
-                      </a>
-                    </td>
-                    <td>{{ teacher.TeacherYearOfBirth }}</td>
-                    <td>{{ teacher.TeacherYearOfDeath }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Students Table -->
-            <div class="students-section" *ngIf="rabbiStudents && rabbiStudents.length > 0">
-              <h3>תלמידים</h3>
-              <table class="students-table">
-                <thead>
-                  <tr>
-                    <th>שם</th>
-                    <th>לידה</th>
-                    <th>פטירה</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let student of rabbiStudents">
-                    <td>
-                      <a href="javascript:void(0)" (click)="selectRabbiById(student.RabbiID)" class="student-link">
-                        {{ student.StudentName }}
-                      </a>
-                    </td>
-                    <td>{{ student.StudentYearOfBirth }}</td>
-                    <td>{{ student.StudentYearOfDeath }}</td>
-                  </tr>
-                </tbody>
-              </table>
+          <div class="w-full bg-gray-100 border border-gray-300 rounded-md p-0 m-0" style="direction: rtl; text-align: right; font-size: 11px; line-height: 1.2;" *ngIf="selectedRabbi">
+            <div style="padding: 6px 8px;">
+              <h3 style="margin: 0 0 4px 0; font-size: 12px;">פרטים נוספים</h3>
+              <div style="margin-bottom: 2px;"><strong>שם:</strong> {{ selectedRabbi.FullName }}</div>
+              <div style="margin-bottom: 2px;"><strong>שם עברי:</strong> {{ selectedRabbi.HebrewName }}</div>
+              <div style="margin-bottom: 2px;"><strong>ידוע בשם:</strong> {{ selectedRabbi.KnownFor }}</div>
+              <div style="margin-bottom: 2px;"><strong>מקום לידה:</strong> {{ selectedRabbi.PlaceOfBirth }}</div>
+              <div style="margin-bottom: 2px;"><strong>מקום פטירה:</strong> {{ selectedRabbi.PlaceOfPtira }}</div>
+              <div style="margin-bottom: 2px;"><strong>הערות:</strong> {{ selectedRabbi.Notes }}</div>
+              <div style="margin-bottom: 0;"><strong>מקורות:</strong> {{ selectedRabbi.Sources }}</div>
             </div>
           </div>
-        </div>
         
         <!-- CRUD Buttons - Below Details Panel -->
         <div *ngIf="selectedRabbi" class="flex gap-2 flex-wrap">
@@ -137,9 +64,8 @@
         </div>
         
         <!-- Table on the right -->
-        <div class="flex-1 min-w-0">
-          <div class="overflow-x-auto">
-        <table class="w-full border-collapse text-xs" style="direction: rtl; text-align: right; font-size: 0.75rem; font-family: 'Times New Roman', 'David', 'Narkisim', serif;">
+        <div style="flex: 1; min-width: 0; overflow-x: auto;">
+        <table class="w-full border-collapse text-xs" style="direction: rtl; text-align: right; font-size: 0.75rem;">
           <thead>
             <tr class="bg-gray-100">
               <th></th>
@@ -272,6 +198,40 @@
                 </span>
               </th>
             </tr>
+            <!-- Search Row -->
+            <tr class="bg-gray-100">
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 140px; width: 140px;">
+                <input type="text" [(ngModel)]="columnFilters['FullName']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 100px; width: 100px;">
+                <input type="text" [(ngModel)]="columnFilters['KnownAS']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 80px; width: 80px;">
+                <input type="text" [(ngModel)]="columnFilters['City']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 70px; width: 70px;">
+                <input type="text" [(ngModel)]="columnFilters['Country']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 70px; width: 70px;">
+                <input type="text" [(ngModel)]="columnFilters['Period']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 20px; width: 20px;"></th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 50px; width: 50px;">
+                <input type="number" [(ngModel)]="columnFilters['HebDob']" (ngModelChange)="applyFilters()" placeholder="שנה" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 45px; width: 45px;">
+                <input type="number" [(ngModel)]="columnFilters['YearOfBirth']" (ngModelChange)="applyFilters()" placeholder="שנה" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 50px; width: 50px;">
+                <input type="number" [(ngModel)]="columnFilters['HebDoP']" (ngModelChange)="applyFilters()" placeholder="שנה" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 45px; width: 45px;">
+                <input type="number" [(ngModel)]="columnFilters['YearOfDeath']" (ngModelChange)="applyFilters()" placeholder="שנה" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 50px; width: 50px;">
+                <input type="number" [(ngModel)]="columnFilters['RabbiID']" (ngModelChange)="applyFilters()" placeholder="ID" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+            </tr>
           </thead>
           <tbody>
             <!-- Add New Row -->
@@ -287,12 +247,6 @@
               <td class="px-1 py-0.5 border border-gray-300" style="max-width: 50px; width: 50px;"><input type="number" [(ngModel)]="newRabbi.HebDoP" placeholder="שנה עברית" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
               <td class="px-1 py-0.5 border border-gray-300" style="max-width: 45px; width: 45px;"><input type="number" [(ngModel)]="newRabbi.YearOfDeath" placeholder="שנה" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
               <td class="px-1 py-0.5 border border-gray-300" style="max-width: 50px; width: 50px;"><input type="number" [(ngModel)]="newRabbi.RabbiID" placeholder="ID" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
-            </tr>
-            <!-- Add New Button Row -->
-            <tr *ngIf="!isAddingNew" class="bg-gray-50">
-              <td colspan="10" class="text-center py-2">
-                <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded cursor-pointer font-bold" (click)="startAddingNew()">+ הוסף תלמיד חכם חדש</button>
-              </td>
             </tr>
             <!-- Data Rows -->
             <tr *ngFor="let rabbi of filteredTalmideiHahamim" 
@@ -320,7 +274,7 @@
                     {{ rabbi.FullName }}
                   </a>
                 </td>
-                <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 100px; width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: 'Times New Roman', 'David', 'Narkisim', serif;">{{ rabbi.knownAs }}</td>
+                <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 100px; width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ rabbi.knownAs }}</td>
                 <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 80px; width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ rabbi.City }}</td>
                 <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 70px; width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ rabbi.Country }}</td>
                 <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 70px; width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ rabbi.Period }}</td>
@@ -335,8 +289,6 @@
           </tbody>
         </table>
       </div>
-      </div>
-      
       </div>
   </div>
 

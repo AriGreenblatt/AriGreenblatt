@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { DatabaseService, TableInfo, ApiResponse } from './database.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-root',
@@ -19,8 +20,8 @@ export class AppComponent implements OnInit {
   talmideiHahamim: any[] = [];
   filteredTalmideiHahamim: any[] = [];
   selectedRabbi: any = null;
-  rabbiStudents: any[] = [];
-  rabbiTeachers: any[] = [];
+
+
   isLoading = false;
   error: string | null = null;
   sortColumn: string = '';
@@ -43,6 +44,20 @@ export class AppComponent implements OnInit {
   selectedCountries: string[] = [];
   selectedPeriods: string[] = [];
   searchText: string = '';
+  
+  // Column search filters
+  columnFilters: {[key: string]: string} = {
+    FullName: '',
+    KnownAS: '',
+    City: '',
+    Country: '',
+    Period: '',
+    HebDob: '',
+    YearOfBirth: '',
+    HebDoP: '',
+    YearOfDeath: '',
+    RabbiID: ''
+  };
   
   // Dropdown states
   showCityDropdown: boolean = false;
@@ -251,7 +266,8 @@ export class AppComponent implements OnInit {
       cities: this.selectedCities,
       countries: this.selectedCountries,
       periods: this.selectedPeriods,
-      searchText: this.searchText
+      searchText: this.searchText,
+      columnFilters: this.columnFilters
     });
     
     this.filteredTalmideiHahamim = this.talmideiHahamim.filter(rabbi => {
@@ -264,7 +280,24 @@ export class AppComponent implements OnInit {
         (rabbi.FullName && rabbi.FullName.toLowerCase().includes(this.searchText.toLowerCase())) ||
         (rabbi.KnownAS && rabbi.KnownAS.includes(this.searchText));
       
-      return cityMatch && countryMatch && periodMatch && searchMatch;
+      // Column-specific filters
+      const columnMatch = Object.keys(this.columnFilters).every(col => {
+        const filterValue = this.columnFilters[col];
+        if (!filterValue) return true;
+        
+        const rabbiValue = rabbi[col];
+        if (rabbiValue === null || rabbiValue === undefined) return false;
+        
+        // For numeric columns, do exact or starts-with match
+        if (['YearOfBirth', 'YearOfDeath', 'HebDob', 'HebDoP', 'RabbiID'].includes(col)) {
+          return String(rabbiValue).startsWith(filterValue);
+        }
+        
+        // For text columns, do case-insensitive contains match
+        return String(rabbiValue).toLowerCase().includes(filterValue.toLowerCase());
+      });
+      
+      return cityMatch && countryMatch && periodMatch && searchMatch && columnMatch;
     });
     
     console.log('Filtered results:', this.filteredTalmideiHahamim.length, 'out of', this.talmideiHahamim.length);
@@ -276,8 +309,6 @@ export class AppComponent implements OnInit {
 
   selectRabbi(rabbi: any) {
     this.selectedRabbi = rabbi;
-    this.loadRabbiStudents(rabbi.RabbiID);
-    this.loadRabbiTeachers(rabbi.RabbiID);
   }
 
   selectRabbiById(rabbiId: number) {
@@ -303,37 +334,9 @@ export class AppComponent implements OnInit {
     }
   }
 
-  loadRabbiStudents(rabbiId: number) {
-    this.rabbiStudents = [];
-    this.databaseService.getRabbiStudents(rabbiId).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.rabbiStudents = response.data;
-          console.log('Loaded students:', this.rabbiStudents);
-        }
-      },
-      error: (error) => {
-        console.error('Error loading students:', error);
-        this.rabbiStudents = [];
-      }
-    });
-  }
 
-  loadRabbiTeachers(rabbiId: number) {
-    this.rabbiTeachers = [];
-    this.databaseService.getRabbiTeachers(rabbiId).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.rabbiTeachers = response.data;
-          console.log('Loaded teachers:', this.rabbiTeachers);
-        }
-      },
-      error: (error) => {
-        console.error('Error loading teachers:', error);
-        this.rabbiTeachers = [];
-      }
-    });
-  }
+
+
 
   sortBy(column: string) {
     if (this.sortColumn === column) {
@@ -564,5 +567,52 @@ export class AppComponent implements OnInit {
   getRabbiName(rabbiId: number): string {
     const rabbi = this.talmideiHahamim.find(r => r.RabbiID === rabbiId);
     return rabbi ? rabbi.FullName : `ID: ${rabbiId}`;
+  }
+
+  exportToExcel(): void {
+    // Prepare data for export
+    const dataToExport = this.filteredTalmideiHahamim.map(rabbi => ({
+      'ID': rabbi.RabbiID,
+      'שם': rabbi.FullName,
+      'ידוע בשם': rabbi.knownAs,
+      'עיר': rabbi.City,
+      'מדינה': rabbi.Country,
+      'תקופה': rabbi.Period,
+      'פטירה': rabbi.YearOfDeath,
+      'פטירה עברי': rabbi.HebDoP,
+      'לידה': rabbi.YearOfBirth,
+      'לידה עברי': rabbi.HebDob,
+      'תקופה משוערת': rabbi.Approx == 1 ? '*' : ''
+    }));
+
+    // Create worksheet
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    
+    // Set column widths
+    ws['!cols'] = [
+      { wch: 8 },  // ID
+      { wch: 30 }, // שם
+      { wch: 25 }, // ידוע בשם
+      { wch: 20 }, // עיר
+      { wch: 15 }, // מדינה
+      { wch: 15 }, // תקופה
+      { wch: 10 }, // פטירה
+      { wch: 12 }, // פטירה עברי
+      { wch: 10 }, // לידה
+      { wch: 12 }, // לידה עברי
+      { wch: 8 }   // תקופה משוערת
+    ];
+
+    // Create workbook
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'תלמידי חכמים');
+
+    // Generate filename with current date
+    const date = new Date();
+    const dateStr = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    const filename = `תלמידי_חכמים_${dateStr}.xlsx`;
+
+    // Save file
+    XLSX.writeFile(wb, filename);
   }
 }

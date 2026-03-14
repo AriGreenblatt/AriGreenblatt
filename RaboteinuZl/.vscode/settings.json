@@ -1,0 +1,18 @@
+{
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/out": true,
+    "**/.git": true,
+    "**/coverage": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/out": true,
+    "**/.git": true,
+    "**/coverage": true
+  },
+  "chat.agent.thinking.collapsedTools": "off",
+  "chat.agent.thinkingStyle": "collapsed"
+}

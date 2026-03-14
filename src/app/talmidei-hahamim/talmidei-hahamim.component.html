@@ -1,0 +1,333 @@
+<!-- Talmidei Hahamim Component -->
+<div class="w-full">
+  <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mt-4">
+    <strong>Error:</strong> {{ error }}
+  </div>
+
+  <!-- Talmidei Hahamim Table -->
+  <div class="bg-white shadow-md mt-0" *ngIf="talmideiHahamim && talmideiHahamim.length > 0">
+
+      <!-- Search section at the top -->
+      <div class="flex justify-end items-center mb-2.5 mt-2.5">
+        <div class="m-0 max-w-xs" style="direction: rtl;">
+          <div>
+            <input 
+              type="text" 
+              class="w-full max-w-md px-3 py-1 border-2 border-indigo-500 rounded focus:outline-none focus:border-purple-600 focus:shadow-lg text-xs" 
+              [(ngModel)]="searchText" 
+              (ngModelChange)="onSearchChange()"
+              placeholder="חיפוש לפי שם..."
+              dir="rtl"
+              style="text-align: right;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Table and Details Panel side by side -->
+      <div style="display: flex; flex-direction: row; gap: 20px; align-items: flex-start; width: 100%;">
+        <!-- Left column: Details Panel, CRUD Buttons, and Image stacked -->
+        <div style="display: flex; flex-direction: column; gap: 5px; min-width: 280px; max-width: 280px; flex-shrink: 0; position: sticky; top: 10px; margin-top: 55px; max-height: 80vh; overflow-y: auto;">
+          <!-- Details Panel -->
+          <div class="w-full bg-gray-100 border border-gray-300 rounded-md p-0 m-0" style="direction: rtl; text-align: right; font-size: 11px; line-height: 1.2;" *ngIf="selectedRabbi">
+            <div style="padding: 6px 8px;">
+              <h3 style="margin: 0 0 4px 0; font-size: 12px;">פרטים נוספים</h3>
+              <div style="margin-bottom: 2px;" *ngIf="selectedRabbi.KnownFor"><strong>ידוע בגלל:</strong> {{ selectedRabbi.KnownFor }}</div>
+              <div style="margin-bottom: 0;" *ngIf="selectedRabbi.Notes"><strong>הערות:</strong> {{ selectedRabbi.Notes }}</div>
+            </div>
+          </div>
+        
+        <!-- CRUD Buttons - Below Details Panel -->
+        <div *ngIf="selectedRabbi" class="flex gap-2 flex-wrap">
+          <button *ngIf="!isAddingNew && !editingRabbiId" class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded cursor-pointer text-xs font-bold" (click)="startAddingNew()">+ הוסף</button>
+          <button *ngIf="selectedRabbi && !isAddingNew && !editingRabbiId" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded cursor-pointer text-xs font-bold" (click)="startEditing(selectedRabbi)">✏️ ערוך</button>
+          <button *ngIf="selectedRabbi && !isAddingNew && !editingRabbiId" class="bg-purple-500 hover:bg-purple-600 text-white px-2 py-1 rounded cursor-pointer text-xs font-bold" (click)="openDetailsPanel()">📋 פרטים</button>
+          <button *ngIf="editingRabbiId" class="bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 rounded cursor-pointer text-xs font-bold" (click)="saveEdit()">💾 שמור</button>
+          <button *ngIf="editingRabbiId || isAddingNew" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded cursor-pointer text-xs font-bold" (click)="cancelEdit()">✖️ בטל</button>
+        </div>
+        
+        <div *ngIf="!selectedRabbi" class="text-center text-gray-600 italic p-5 bg-gray-50 rounded-md" style="direction: rtl;">
+          <p>בחר תלמיד חכם מהרשימה לצפייה בפרטים</p>
+        </div>
+        
+        <!-- Image section below CRUD buttons -->
+        <div *ngIf="selectedRabbi && selectedRabbi.ImageUrl" class="w-full text-center mt-2.5 p-0.5 rounded-lg">
+          <img [src]="'http://localhost:3000' + selectedRabbi.ImageUrl.trim()" alt="{{selectedRabbi.FullName}}" class="max-w-full h-auto rounded-lg shadow-md" />
+        </div>
+        
+        <!-- Talmidim Relationships Table (no header) -->
+        <div *ngIf="selectedRabbi" class="w-full mt-2" style="direction: rtl; text-align: right; font-size: 10px;">
+          <table class="w-full border-collapse" *ngIf="filteredTalmidim.length > 0">
+            <tbody>
+              <ng-container *ngFor="let talmid of filteredTalmidim">
+                <tr *ngIf="talmid.RabbiId == selectedRabbi.RabbiID" 
+                    class="hover:bg-gray-100 border-b border-gray-200" style="line-height: 1.1;">
+                  <td class="py-0 px-1 text-gray-600" style="width: 30%;">
+                    {{ talmid.RelationshipName }}
+                  </td>
+                  <td class="py-0 px-1" style="width: 70%;">
+                    <a class="text-blue-600 hover:underline cursor-pointer"
+                       (click)="selectRabbiById(talmid.Rabbi2Id)">
+                      {{ talmid.Rabbi2Name || talmid.Rabbi2KnownAs }}
+                    </a>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Sforim Table -->
+        <div *ngIf="selectedRabbi" class="w-full mt-3" style="direction: rtl; text-align: right; font-size: 10px;">
+          <h4 style="margin: 0 0 4px 0; font-size: 11px; font-weight: bold;">ספרים</h4>
+          <table class="w-full border-collapse" *ngIf="getFilteredSforim().length > 0">
+            <tbody>
+              <tr *ngFor="let sefer of getFilteredSforim()" class="hover:bg-gray-100 border-b border-gray-200">
+                <td class="py-1 px-1 font-medium" style="width: 35%;">{{ sefer.Title }}</td>
+                <td class="py-1 px-1 text-gray-600" style="width: 65%;">{{ sefer.Reference }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="getFilteredSforim().length === 0" class="text-gray-500 text-xs italic">אין ספרים</div>
+        </div>
+        </div>
+        
+        <!-- Table on the right -->
+        <div style="flex: 1; min-width: 0; overflow-x: auto;">
+        <table class="w-full border-collapse text-xs" style="direction: rtl; text-align: right; font-size: 0.75rem;">
+          <thead>
+            <tr class="bg-gray-100">
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th>
+                <div class="relative inline-block">
+                  <button class="bg-indigo-500 text-white border-none px-2 py-1 rounded cursor-pointer text-xs flex items-center gap-1 min-w-[40px] justify-center hover:bg-indigo-600" (click)="toggleDropdown('period')">
+                    <span *ngIf="selectedPeriods.length > 0" class="bg-white bg-opacity-30 px-1.5 py-0.5 rounded text-[10px] font-bold">{{ selectedPeriods.length }}</span>
+                    <span>▼</span>
+                  </button>
+                  <div class="absolute z-50 bg-white border border-gray-300 rounded-md shadow-lg min-w-[200px] max-h-96 overflow-y-auto" style="direction: rtl; text-align: right;" *ngIf="showPeriodDropdown">
+                    <div class="px-3 py-2 cursor-pointer hover:bg-indigo-100 font-bold text-indigo-600" (click)="clearAllFilters('period')">
+                      הצג כולם
+                    </div>
+                    <div class="px-3 py-2 cursor-pointer hover:bg-gray-100 flex justify-between items-center" *ngFor="let period of periods">
+                      <span (click)="togglePeriod(period)">{{ period }}</span>
+                      <input type="checkbox" [checked]="isSelected('period', period)" (change)="togglePeriod(period)" class="ml-2">
+                    </div>
+                    <div class="text-center sticky bottom-0 bg-white border-t border-gray-300 p-2">
+                      <button class="bg-indigo-500 text-white border-none px-5 py-1.5 rounded cursor-pointer text-xs font-bold w-4/5 hover:bg-indigo-600" (click)="toggleDropdown('period')">סגור</button>
+                    </div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="relative inline-block">
+                  <button class="bg-indigo-500 text-white border-none px-2 py-1 rounded cursor-pointer text-xs flex items-center gap-1 min-w-[40px] justify-center hover:bg-indigo-600" (click)="toggleDropdown('country')">
+                    <span *ngIf="selectedCountries.length > 0" class="bg-white bg-opacity-30 px-1.5 py-0.5 rounded text-[10px] font-bold">{{ selectedCountries.length }}</span>
+                    <span>▼</span>
+                  </button>
+                  <div class="absolute z-50 bg-white border border-gray-300 rounded-md shadow-lg min-w-[200px] max-h-96 overflow-y-auto" style="direction: rtl; text-align: right;" *ngIf="showCountryDropdown">
+                    <div class="px-3 py-2 cursor-pointer hover:bg-indigo-100 font-bold text-indigo-600" (click)="clearAllFilters('country')">
+                      הצג כולם
+                    </div>
+                    <div class="px-3 py-2 cursor-pointer hover:bg-gray-100 flex justify-between items-center" *ngFor="let country of getFilteredCountries()">
+                      <span (click)="toggleCountry(country)">{{ country }}</span>
+                      <input type="checkbox" [checked]="isSelected('country', country)" (change)="toggleCountry(country)" class="ml-2">
+                    </div>
+                    <div class="text-center sticky bottom-0 bg-white border-t border-gray-300 p-2">
+                      <button class="bg-indigo-500 text-white border-none px-5 py-1.5 rounded cursor-pointer text-xs font-bold w-4/5 hover:bg-indigo-600" (click)="toggleDropdown('country')">סגור</button>
+                    </div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="relative inline-block">
+                  <button class="bg-indigo-500 text-white border-none px-2 py-1 rounded cursor-pointer text-xs flex items-center gap-1 min-w-[40px] justify-center hover:bg-indigo-600" (click)="toggleDropdown('city')">
+                    <span *ngIf="selectedCities.length > 0" class="bg-white bg-opacity-30 px-1.5 py-0.5 rounded text-[10px] font-bold">{{ selectedCities.length }}</span>
+                    <span>▼</span>
+                  </button>
+                  <div class="absolute z-50 bg-white border border-gray-300 rounded-md shadow-lg min-w-[200px] max-h-96 overflow-y-auto" style="direction: rtl; text-align: right;" *ngIf="showCityDropdown">
+                    <div class="px-3 py-2 cursor-pointer hover:bg-indigo-100 font-bold text-indigo-600" (click)="clearAllFilters('city')">
+                      הצג כולם
+                    </div>
+                    <div class="px-3 py-2 cursor-pointer hover:bg-gray-100 flex justify-between items-center" *ngFor="let city of getFilteredCities()">
+                      <span (click)="toggleCity(city)">{{ city }}</span>
+                      <input type="checkbox" [checked]="isSelected('city', city)" (change)="toggleCity(city)" class="ml-2">
+                    </div>
+                    <div class="text-center sticky bottom-0 bg-white border-t border-gray-300 p-2">
+                      <button class="bg-indigo-500 text-white border-none px-5 py-1.5 rounded cursor-pointer text-xs font-bold w-4/5 hover:bg-indigo-600" (click)="toggleDropdown('city')">סגור</button>
+                    </div>
+                  </div>
+                </div>
+              </th>
+            </tr>
+            <tr class="bg-indigo-500 text-white text-xs" style="direction: rtl; text-align: right;">
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('FullName')" style="max-width: 140px; width: 140px;">
+                שם
+                <span *ngIf="sortColumn === 'FullName'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('knownAs')" style="max-width: 100px; width: 100px;">
+                ידוע בשם
+                <span *ngIf="sortColumn === 'knownAs'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('City')" style="max-width: 80px; width: 80px;">
+                עיר
+                <span *ngIf="sortColumn === 'City'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('Country')" style="max-width: 70px; width: 70px;">
+                מדינה
+                <span *ngIf="sortColumn === 'Country'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('Period')" style="max-width: 70px; width: 70px;">
+                תקופה
+                <span *ngIf="sortColumn === 'Period'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 20px; width: 20px;"></th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('HebDob')" style="max-width: 50px; width: 50px;">
+                לידה עברי
+                <span *ngIf="sortColumn === 'HebDob'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('YearOfBirth')" style="max-width: 45px; width: 45px;">
+                 לידה
+                <span *ngIf="sortColumn === 'YearOfBirth'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('HebDoP')" style="max-width: 50px; width: 50px;">
+                פטירה עברי
+                <span *ngIf="sortColumn === 'HebDoP'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('YearOfDeath')" style="max-width: 45px; width: 45px;">
+                פטירה
+                <span *ngIf="sortColumn === 'YearOfDeath'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+              <th class="px-1 py-1 border border-gray-300 font-bold cursor-pointer hover:bg-indigo-600" (click)="sortBy('RabbiID')" style="max-width: 50px; width: 50px;">
+                ID
+                <span *ngIf="sortColumn === 'RabbiID'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
+            </tr>
+            <!-- Search Row -->
+            <tr class="bg-gray-100">
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 140px; width: 140px;">
+                <input type="text" [(ngModel)]="columnFilters['FullName']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 100px; width: 100px;">
+                <input type="text" [(ngModel)]="columnFilters['knownAs']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 80px; width: 80px;">
+                <input type="text" [(ngModel)]="columnFilters['City']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 70px; width: 70px;">
+                <input type="text" [(ngModel)]="columnFilters['Country']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 70px; width: 70px;">
+                <input type="text" [(ngModel)]="columnFilters['Period']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 20px; width: 20px;"></th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 50px; width: 50px;">
+                <input type="number" [(ngModel)]="columnFilters['HebDob']" (ngModelChange)="applyFilters()" placeholder="שנה" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 45px; width: 45px;">
+                <input type="number" [(ngModel)]="columnFilters['YearOfBirth']" (ngModelChange)="applyFilters()" placeholder="שנה" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 50px; width: 50px;">
+                <input type="number" [(ngModel)]="columnFilters['HebDoP']" (ngModelChange)="applyFilters()" placeholder="שנה" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 45px; width: 45px;">
+                <input type="number" [(ngModel)]="columnFilters['YearOfDeath']" (ngModelChange)="applyFilters()" placeholder="שנה" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+              <th class="px-1 py-1 border border-gray-300" style="max-width: 50px; width: 50px;">
+                <input type="number" [(ngModel)]="columnFilters['RabbiID']" (ngModelChange)="applyFilters()" placeholder="ID" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs">
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Add New Row -->
+            <tr *ngIf="isAddingNew" class="bg-yellow-50">
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 140px; width: 140px;"><input type="text" [(ngModel)]="newRabbi.FullName" placeholder="שם מלא *" dir="rtl" required class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 100px; width: 100px;"><input type="text" [(ngModel)]="newRabbi.knownAs" placeholder="ידוע בשם" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 80px; width: 80px;"><input type="text" [(ngModel)]="newRabbi.City" placeholder="עיר" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 70px; width: 70px;"><input type="text" [(ngModel)]="newRabbi.Country" placeholder="מדינה" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 70px; width: 70px;"><input type="text" [(ngModel)]="newRabbi.Period" placeholder="תקופה" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 20px; width: 20px;"><input type="number" [(ngModel)]="newRabbi.Approx" placeholder="1" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 50px; width: 50px;"><input type="number" [(ngModel)]="newRabbi.HebDob" placeholder="שנה עברית" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 45px; width: 45px;"><input type="number" [(ngModel)]="newRabbi.YearOfBirth" placeholder="שנה" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 50px; width: 50px;"><input type="number" [(ngModel)]="newRabbi.HebDoP" placeholder="שנה עברית" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 45px; width: 45px;"><input type="number" [(ngModel)]="newRabbi.YearOfDeath" placeholder="שנה" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              <td class="px-1 py-0.5 border border-gray-300" style="max-width: 50px; width: 50px;"><input type="number" [(ngModel)]="newRabbi.RabbiID" placeholder="ID" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+            </tr>
+            <!-- Data Rows -->
+            <tr *ngFor="let rabbi of filteredTalmideiHahamim" 
+                [class.bg-blue-100]="selectedRabbi?.RabbiID === rabbi.RabbiID"
+                [class.bg-yellow-50]="isEditing(rabbi)"
+                class="hover:bg-gray-50 cursor-pointer">
+              <!-- Edit Mode -->
+              <ng-container *ngIf="isEditing(rabbi)">
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 140px; width: 140px;"><input type="text" [(ngModel)]="editingRabbi.FullName" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 100px; width: 100px;"><input type="text" [(ngModel)]="editingRabbi.knownAs" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 80px; width: 80px;"><input type="text" [(ngModel)]="editingRabbi.City" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 70px; width: 70px;"><input type="text" [(ngModel)]="editingRabbi.Country" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 70px; width: 70px;"><input type="text" [(ngModel)]="editingRabbi.Period" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 20px; width: 20px;"><input type="number" [(ngModel)]="editingRabbi.Approx" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 50px; width: 50px;"><input type="number" [(ngModel)]="editingRabbi.HebDob" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 45px; width: 45px;"><input type="number" [(ngModel)]="editingRabbi.YearOfBirth" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 50px; width: 50px;"><input type="number" [(ngModel)]="editingRabbi.HebDoP" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 45px; width: 45px;"><input type="number" [(ngModel)]="editingRabbi.YearOfDeath" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+                <td class="px-1 py-0.5 border border-gray-300" style="max-width: 50px; width: 50px;"><input type="number" [(ngModel)]="editingRabbi.RabbiID" dir="rtl" class="w-full px-1 py-0.5 border border-gray-300 rounded text-xs"></td>
+              </ng-container>
+              <!-- View Mode -->
+              <ng-container *ngIf="!isEditing(rabbi)">
+                <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 140px; width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  <a [href]="'https://he.wikipedia.org/wiki/' + rabbi.FullName" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                    {{ rabbi.FullName }}
+                  </a>
+                </td>
+                <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 100px; width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ rabbi.knownAs }}</td>
+                <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 80px; width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ rabbi.City }}</td>
+                <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 70px; width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ rabbi.Country }}</td>
+                <td class="px-1 py-0.5 border border-gray-300" (click)="selectRabbi(rabbi)" style="max-width: 70px; width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ rabbi.Period }}</td>
+                <td class="px-1 py-0.5 border border-gray-300 text-center" (click)="selectRabbi(rabbi)" style="max-width: 20px; width: 20px;">{{ rabbi.Approx == 1 ? '*' : '' }}</td>
+                <td class="px-1 py-0.5 border border-gray-300 text-center" (click)="selectRabbi(rabbi)" style="max-width: 50px; width: 50px;">{{ rabbi.HebDob }}</td>
+                <td class="px-1 py-0.5 border border-gray-300 text-center" (click)="selectRabbi(rabbi)" style="max-width: 45px; width: 45px;">{{ rabbi.YearOfBirth }}</td>
+                <td class="px-1 py-0.5 border border-gray-300 text-center" (click)="selectRabbi(rabbi)" style="max-width: 50px; width: 50px;">{{ rabbi.HebDoP }}</td>
+                <td class="px-1 py-0.5 border border-gray-300 text-center" (click)="selectRabbi(rabbi)" style="max-width: 45px; width: 45px;">{{ rabbi.YearOfDeath }}</td>
+                <td class="px-1 py-0.5 border border-gray-300 text-center" (click)="selectRabbi(rabbi)" style="max-width: 50px; width: 50px;">{{ rabbi.RabbiID }}</td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+  </div>
+
+  <!-- Details Panel Modal -->
+  <app-talmid-haham-details
+    *ngIf="showDetailsPanel && selectedRabbi"
+    [rabbi]="selectedRabbi"
+    [talmidim]="filteredTalmidim"
+    [allRabbis]="talmideiHahamim"
+    [sforim]="sforim"
+    (close)="closeDetailsPanel()"
+    (selectRabbi)="onDetailsSelectRabbi($event)">
+  </app-talmid-haham-details>
+</div>

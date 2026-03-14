@@ -1,0 +1,144 @@
+<!-- Talmidei Hahamim Component -->
+<div class="container-block">
+  <div *ngIf="error" class="error-banner">
+    <strong>Error:</strong> {{ error }}
+  </div>
+
+  <div class="main-card" *ngIf="talmideiHahamim && talmideiHahamim.length > 0">
+    <!-- Search section -->
+    <div class="search-header">
+      <div class="search-input-container">
+        <input type="text" class="search-input" 
+          [(ngModel)]="searchText" (ngModelChange)="onSearchChange()" placeholder="חיפוש לפי שם..." dir="rtl">
+      </div>
+    </div>
+
+    <!-- Table and Details Panel -->
+    <div class="content-flex">
+      <!-- Left column -->
+      <div class="sidebar">
+        <div *ngIf="!selectedRabbi" class="empty-state">
+          <p>בחר תלמיד חכם מהרשימה לצפייה בפרטים</p>
+        </div>
+        
+        <!-- Image -->
+        <div *ngIf="selectedRabbi && selectedRabbi.ImageUrl" class="image-container">
+          <img [src]="'http://localhost:3000' + selectedRabbi.ImageUrl.trim()" [alt]="selectedRabbi.FullName" class="rabbi-image" />
+        </div>
+        
+        <!-- Relationships -->
+        <app-talmidim-table
+          [talmidim]="filteredTalmidim"
+          [selectedRabbiId]="selectedRabbi?.ID"
+          [allRabbis]="talmideiHahamim"
+          [relationshipNameByCode]="relationshipNameByCode"
+          (selectRabbi)="selectRabbiById($event)">
+        </app-talmidim-table>
+
+        <!-- Sforim -->
+        <div *ngIf="selectedRabbi" class="sforim-section">
+          <h4 class="details-heading">ספרים</h4>
+          <table class="section-table" *ngIf="filteredSforim.length > 0">
+            <tbody>
+              <tr *ngFor="let sefer of filteredSforim" class="table-row-hover border-bottom">
+                <td style="width: 25%; font-weight: 500;">{{ sefer.HebTitle }}</td>
+                <td style="width: 75%; color: #4b5563;">{{ sefer.HebReference }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="filteredSforim.length === 0" style="color: #6b7280; font-size: 0.75rem; font-style: italic;">אין ספרים</div>
+        </div>
+      </div>
+      
+      <!-- Table on the right -->
+      <div class="table-container">
+        <!-- CRUD Buttons above table -->
+        <div *ngIf="selectedRabbi" class="table-action-buttons">
+          <button *ngIf="!isAddingNew && !editingRabbiId" class="btn btn-green" (click)="startAddingNew()">+ הוסף</button>
+          <button *ngIf="selectedRabbi && !isAddingNew && !editingRabbiId" class="btn btn-blue" (click)="startEditing(selectedRabbi)">✏️ ערוך</button>
+          <button *ngIf="selectedRabbi && !isAddingNew && !editingRabbiId" class="btn btn-purple" (click)="openDetailsPanel()">📋 פרטים</button>
+          <button *ngIf="editingRabbiId" class="btn btn-indigo" (click)="saveEdit()">💾 שמור</button>
+          <button *ngIf="editingRabbiId || isAddingNew" class="btn btn-red" (click)="cancelEdit()">✖️ בטל</button>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th (click)="sortBy('FullName')" style="width: 140px;">שם</th>
+              <th (click)="sortBy('knownAs')" style="width: 100px;">ידוע בשם</th>
+              <th (click)="sortBy('City')" style="width: 80px;">עיר</th>
+              <th (click)="sortBy('Country')" style="width: 70px;">מדינה</th>
+              <th (click)="sortBy('Period')" style="width: 70px;">תקופה</th>
+              <th style="width: 20px;"></th>
+              <th (click)="sortBy('HebDob')" style="width: 50px;">לידה עברי</th>
+              <th (click)="sortBy('YearOfBirth')" style="width: 45px;">לידה</th>
+              <th (click)="sortBy('HebDoP')" style="width: 50px;">פטירה עברי</th>
+              <th (click)="sortBy('YearOfDeath')" style="width: 45px;">פטירה</th>
+              <th (click)="sortBy('ID')" style="width: 50px;">ID</th>
+            </tr>
+            <tr class="filter-row">
+              <th><input type="text" [(ngModel)]="columnFilters['FullName']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="filter-input"></th>
+              <th><input type="text" [(ngModel)]="columnFilters['knownAs']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="filter-input"></th>
+              <th><input type="text" [(ngModel)]="columnFilters['City']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="filter-input"></th>
+              <th><input type="text" [(ngModel)]="columnFilters['Country']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="filter-input"></th>
+              <th><input type="text" [(ngModel)]="columnFilters['Period']" (ngModelChange)="applyFilters()" placeholder="חיפוש..." dir="rtl" class="filter-input"></th>
+              <th></th>
+              <th><input type="number" [(ngModel)]="columnFilters['HebDob']" (ngModelChange)="applyFilters()" placeholder="שנה" class="filter-input"></th>
+              <th><input type="number" [(ngModel)]="columnFilters['YearOfBirth']" (ngModelChange)="applyFilters()" placeholder="שנה" class="filter-input"></th>
+              <th><input type="number" [(ngModel)]="columnFilters['HebDoP']" (ngModelChange)="applyFilters()" placeholder="שנה" class="filter-input"></th>
+              <th><input type="number" [(ngModel)]="columnFilters['YearOfDeath']" (ngModelChange)="applyFilters()" placeholder="שנה" class="filter-input"></th>
+              <th><input type="number" [(ngModel)]="columnFilters['ID']" (ngModelChange)="applyFilters()" placeholder="ID" class="filter-input"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let rabbi of filteredTalmideiHahamim" 
+                [class.row-selected]="selectedRabbi?.ID === rabbi.ID"
+                [class.row-editing]="isEditing(rabbi)"
+                class="table-row-hover">
+              <ng-container *ngIf="!isEditing(rabbi)">
+                <td (click)="selectRabbi(rabbi)">
+                  <a [href]="'https://he.wikipedia.org/wiki/' + rabbi.FullName" target="_blank" class="table-link">{{ rabbi.FullName }}</a>
+                </td>
+                <td (click)="selectRabbi(rabbi)">{{ rabbi.knownAs }}</td>
+                <td (click)="selectRabbi(rabbi)">{{ rabbi.City }}</td>
+                <td (click)="selectRabbi(rabbi)">{{ rabbi.Country }}</td>
+                <td (click)="selectRabbi(rabbi)">{{ rabbi.Period }}</td>
+                <td (click)="selectRabbi(rabbi)" class="text-center">{{ rabbi.Approx == 1 ? '* ' : '' }}</td>
+                <td (click)="selectRabbi(rabbi)" class="text-center">{{ rabbi.HebDob }}</td>
+                <td (click)="selectRabbi(rabbi)" class="text-center">{{ rabbi.YearOfBirth }}</td>
+                <td (click)="selectRabbi(rabbi)" class="text-center">{{ rabbi.HebDoP }}</td>
+                <td (click)="selectRabbi(rabbi)" class="text-center">{{ rabbi.YearOfDeath }}</td>
+                <td (click)="selectRabbi(rabbi)" class="text-center">{{ rabbi.ID }}</td>
+              </ng-container>
+              <ng-container *ngIf="isEditing(rabbi)">
+                <td><input type="text" [(ngModel)]="editingRabbi.FullName" dir="rtl" class="filter-input"></td>
+                <td><input type="text" [(ngModel)]="editingRabbi.knownAs" dir="rtl" class="filter-input"></td>
+                <td><input type="text" [(ngModel)]="editingRabbi.City" dir="rtl" class="filter-input"></td>
+                <td><input type="text" [(ngModel)]="editingRabbi.Country" dir="rtl" class="filter-input"></td>
+                <td><input type="text" [(ngModel)]="editingRabbi.Period" dir="rtl" class="filter-input"></td>
+                <td><input type="number" [(ngModel)]="editingRabbi.Approx" class="filter-input"></td>
+                <td><input type="number" [(ngModel)]="editingRabbi.HebDob" class="filter-input"></td>
+                <td><input type="number" [(ngModel)]="editingRabbi.YearOfBirth" class="filter-input"></td>
+                <td><input type="number" [(ngModel)]="editingRabbi.HebDoP" class="filter-input"></td>
+                <td><input type="number" [(ngModel)]="editingRabbi.YearOfDeath" class="filter-input"></td>
+                <td><input type="number" [(ngModel)]="editingRabbi.ID" class="filter-input"></td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details Panel Modal -->
+  <app-talmid-haham-details
+    *ngIf="showDetailsPanel && selectedRabbi"
+    [rabbi]="selectedRabbi"
+    [talmidim]="filteredTalmidim"
+    [allRabbis]="talmideiHahamim"
+    [sforim]="sforim"
+    [associations]="associations"
+    [relationships]="relationships"
+    (close)="closeDetailsPanel()"
+    (selectRabbi)="onDetailsSelectRabbi($event)">
+  </app-talmid-haham-details>
+</div>

@@ -1,0 +1,193 @@
+<div class="admin-container">
+  <h1>הוספת תלמיד חכם</h1>
+
+  <div class="form-container">
+    <div class="form-group">
+      <label for="fullName">שם מלא *</label>
+      <input 
+        type="text" 
+        id="fullName" 
+        [(ngModel)]="rabbi.FullName" 
+        placeholder="רבי משה בן מימון"
+        class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label for="knownAs">ידוע כ</label>
+      <input 
+        type="text" 
+        id="knownAs" 
+        [(ngModel)]="rabbi.knownAs" 
+        placeholder="הרמב&quot;ם"
+        class="form-input">
+    </div>
+
+    <div class="wikipedia-section">
+      <button 
+        (click)="searchWikipedia()" 
+        [disabled]="searchingWikipedia"
+        class="wiki-button">
+        {{ searchingWikipedia ? 'מחפש...' : 'חפש בויקיפדיה' }}
+      </button>
+      <span class="wiki-status" [class.success]="wikipediaStatus.includes('✓')">
+        {{ wikipediaStatus }}
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="url">קישור ויקיפדיה</label>
+      <input 
+        type="text" 
+        id="url" 
+        [(ngModel)]="rabbi.URL" 
+        placeholder="https://he.wikipedia.org/wiki/..."
+        class="form-input">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="yearOfBirth">שנת לידה (לועזית)</label>
+        <input 
+          type="number" 
+          id="yearOfBirth" 
+          [(ngModel)]="rabbi.YearOfBirth" 
+          placeholder="1135"
+          class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="yearOfDeath">שנת פטירה (לועזית)</label>
+        <input 
+          type="number" 
+          id="yearOfDeath" 
+          [(ngModel)]="rabbi.YearOfDeath" 
+          placeholder="1204"
+          class="form-input">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="hebDob">שנת לידה (עברית)</label>
+        <input 
+          type="number" 
+          id="hebDob" 
+          [(ngModel)]="rabbi.HebDob" 
+          placeholder="4895"
+          class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="hebDoP">שנת פטירה (עברית)</label>
+        <input 
+          type="number" 
+          id="hebDoP" 
+          [(ngModel)]="rabbi.HebDoP" 
+          placeholder="4965"
+          class="form-input">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="placeOfBirth">מקום לידה</label>
+        <input 
+          type="text" 
+          id="placeOfBirth" 
+          [(ngModel)]="rabbi.PlaceOfBirth" 
+          placeholder="קורדובה"
+          class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="placeOfPtira">מקום פטירה</label>
+        <input 
+          type="text" 
+          id="placeOfPtira" 
+          [(ngModel)]="rabbi.PlaceOfPtira" 
+          placeholder="פוסטאט"
+          class="form-input">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="city">עיר</label>
+        <input 
+          type="text" 
+          id="city" 
+          [(ngModel)]="rabbi.City" 
+          placeholder="קהיר"
+          class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="country">מדינה</label>
+        <input 
+          type="text" 
+          id="country" 
+          [(ngModel)]="rabbi.Country" 
+          placeholder="מצרים"
+          class="form-input">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="period">תקופה</label>
+      <input 
+        type="text" 
+        id="period" 
+        [(ngModel)]="rabbi.Period" 
+        placeholder="ראשונים"
+        class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label for="knownFor">ידוע ב/תחומים</label>
+      <textarea 
+        id="knownFor" 
+        [(ngModel)]="rabbi.KnownFor" 
+        placeholder="הלכה, פילוסופיה, רפואה"
+        rows="2"
+        class="form-input"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="notes">הערות</label>
+      <textarea 
+        id="notes" 
+        [(ngModel)]="rabbi.Notes" 
+        placeholder="מידע נוסף..."
+        rows="3"
+        class="form-input"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="sources">מקורות</label>
+      <textarea 
+        id="sources" 
+        [(ngModel)]="rabbi.Sources" 
+        placeholder="מקורות מידע..."
+        rows="2"
+        class="form-input"></textarea>
+    </div>
+
+    <div class="button-group">
+      <button 
+        (click)="saveRabbi()" 
+        [disabled]="saving"
+        class="save-button">
+        {{ saving ? 'שומר...' : 'שמור' }}
+      </button>
+      <button 
+        (click)="clearForm()" 
+        class="clear-button">
+        נקה טופס
+      </button>
+    </div>
+
+    <div class="save-status" [class.success]="saveStatus.includes('✓')">
+      {{ saveStatus }}
+    </div>
+  </div>
+</div>

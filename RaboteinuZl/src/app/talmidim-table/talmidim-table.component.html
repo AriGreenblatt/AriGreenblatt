@@ -1,0 +1,17 @@
+<div class="relationships-section" *ngIf="selectedRabbiId != null">
+  <h4 class="details-heading">קשרים</h4>
+  <table class="section-table" *ngIf="visibleTalmidim.length > 0">
+    <tbody>
+      <tr *ngFor="let talmid of visibleTalmidim" class="table-row-hover border-bottom">
+        <td style="color: #4b5563; white-space: nowrap; width: 1%;">{{ getRelationshipLabel(talmid) }}</td>
+        <td>
+          <a class="link-blue" (click)="onSelectRabbi(getRabbi2Id(talmid))">
+            {{ getRabbi2Label(talmid) }}
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="visibleTalmidim.length === 0" class="empty-relationships">אין תלמידים</div>
+</div>

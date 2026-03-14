@@ -1,0 +1,21 @@
+{
+  "folders": [
+    { "path": "RaboteinuZl" }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/out": true,
+      "**/.git": true,
+      "**/coverage": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/out": true,
+      "**/.git": true,
+      "**/coverage": true
+    }
+  }
+}

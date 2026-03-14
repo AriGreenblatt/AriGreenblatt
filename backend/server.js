@@ -291,6 +291,40 @@ app.get('/api/talmidim', async (req, res) => {
     }
 });
 
+// Get all sforim
+app.get('/api/sforim', async (req, res) => {
+    try {
+        const query = `
+            SELECT 
+                s.SeferID,
+                s.Title,
+                s.RabbiID,
+                s.Author,
+                s.YearPublished,
+                s.Reference,
+                r.FullName AS RabbiName,
+                r.knownAs AS RabbiKnownAs
+            FROM dbo.sforim s
+            LEFT JOIN dbo.Talmidei_Hahamim r ON s.RabbiID = r.RabbiID
+            ORDER BY s.SeferID ASC
+        `;
+        
+        const result = await database.query(query);
+        console.log('Sforim query returned', result.recordset.length, 'rows');
+        res.json({
+            success: true,
+            data: result.recordset
+        });
+    } catch (error) {
+        console.error('Error fetching sforim:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to fetch sforim',
+            error: error.message 
+        });
+    }
+});
+
 // Create a new talmid (student-teacher relationship)
 app.post('/api/talmidim', async (req, res) => {
     try {

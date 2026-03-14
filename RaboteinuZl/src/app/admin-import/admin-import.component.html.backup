@@ -1,0 +1,604 @@
+<div class="admin-import-container">
+  <h2>ייבוא אוטומטי מוויקיפדיה</h2>
+  <p class="subtitle">Extract rabbi biographical data from Wikipedia with AI assistance</p>
+
+  <!-- Input Section -->
+  <div class="input-section" *ngIf="!extractionComplete">
+    <div class="form-group">
+      <label for="wikipediaUrl">Wikipedia URL</label>
+      <input 
+        type="text" 
+        id="wikipediaUrl" 
+        [(ngModel)]="wikipediaUrl"
+        placeholder="https://he.wikipedia.org/wiki/רש%22י"
+        class="form-control"
+        [disabled]="isExtracting">
+    </div>
+
+    <div class="divider">OR</div>
+
+    <div class="form-group">
+      <label for="rabbiName">שם התלמיד חכם</label>
+      <input 
+        type="text" 
+        id="rabbiName" 
+        [(ngModel)]="rabbiName"
+        placeholder="רש&quot;י"
+        class="form-control rtl-input"
+        [disabled]="isExtracting">
+    </div>
+
+    <button 
+      class="btn btn-primary"
+      (click)="extractWikipedia()"
+      [disabled]="isExtracting || (!wikipediaUrl && !rabbiName)">
+      <span *ngIf="!isExtracting">🔍 Extract Data</span>
+      <span *ngIf="isExtracting">⏳ Extracting...</span>
+    </button>
+  </div>
+
+  <!-- Messages -->
+  <div class="message success" *ngIf="successMessage">
+    ✅ {{ successMessage }}
+  </div>
+  <div class="message error" *ngIf="errorMessage">
+    ❌ {{ errorMessage }}
+  </div>
+
+  <!-- Duplicate Warning -->
+  <div class="duplicate-warning" *ngIf="duplicateCheck?.exists && showComparison">
+    <h3>⚠️ {{ duplicateCheck.message }}</h3>
+    <div class="duplicate-info">
+      <p><strong>רב זה כבר קיים במאגר:</strong></p>
+      <p>שם: {{ duplicateCheck.existing.rabbi.FullName }}</p>
+      <p>שם עברי: {{ duplicateCheck.existing.rabbi.HebFullName }}</p>
+      <p>ספרים קיימים: {{ duplicateCheck.existing.books.length }}</p>
+      <p>אירועים קיימים: {{ duplicateCheck.existing.events.length }}</p>
+      
+      <div class="action-buttons">
+        <button class="btn btn-warning" (click)="updateExisting()" [disabled]="!hasNewData()">
+          🔄 עדכן רשומה קיימת
+        </button>
+        <button class="btn btn-secondary" (click)="showComparison = false">
+          ➡️ המשך בכל זאת (צור כפיל)
+        </button>
+      </div>
+      
+      <div class="legend">
+        <span class="new-data">█</span> מידע חדש
+        <span class="different-data">█</span> שונה מהקיים
+        <span class="same-data">█</span> זהה לקיים
+      </div>
+    </div>
+  </div>
+
+  <!-- Extraction Results -->
+  <div class="extraction-results" *ngIf="extractionComplete && extractedData">
+    <!-- Data Source Legend -->
+    <div class="data-source-legend" *ngIf="extractedData.databaseRecord">
+      <h4>מקור נתונים:</h4>
+      <div class="legend-items">
+        <span class="legend-item">
+          <span class="legend-color field-from-database"></span>
+          <span class="legend-text">🟢 מהמאגר (Database) - נתונים קיימים</span>
+        </span>
+        <span class="legend-item">
+          <span class="legend-color field-from-wikipedia"></span>
+          <span class="legend-text">🟡 מוויקיפדיה (Wikipedia) - נתונים חדשים</span>
+        </span>
+        <span class="legend-item">
+          <span class="legend-color field-empty"></span>
+          <span class="legend-text">⚪ ריק - אין מידע</span>
+        </span>
+      </div>
+    </div>
+    
+    <!-- Overall Confidence -->
+    <div class="confidence-banner" [ngClass]="getConfidenceClass(extractedData.confidence.overall)">
+      <h3>Overall Confidence: {{ extractedData.confidence.overall }}% - {{ getConfidenceLabel(extractedData.confidence.overall) }}</h3>
+      <p>
+        📖 Books: {{ extractedData.confidence.booksCount }} | 
+        👥 Relationships: {{ extractedData.confidence.relationshipsCount }} | 
+        📅 Events: {{ extractedData.confidence.eventsCount }}
+      </p>
+    </div>
+
+    <!-- Editable Rabbi Data -->
+    <div class="edit-section">
+      <h3>📝 מידע על התלמיד חכם (Rabbi Information)</h3>
+      
+      <div class="compact-grid">
+        <div class="form-group-compact">
+          <label for="fullName">שם מלא * <span class="confidence-badge" [ngClass]="getConfidenceClass(extractedData.confidence.rabbi['FullName'] || 0)">{{ extractedData.confidence.rabbi['FullName'] || 0 }}%</span></label>
+          <input type="text" id="fullName" [(ngModel)]="rabbi.FullName" class="form-control-sm rtl-input" [ngClass]="[compareField('FullName', rabbi.FullName), getFieldClass('FullName')]" required>
+        </div>
+
+        <div class="form-group-compact">
+          <label for="knownAs">ידוע כ <span class="confidence-badge" [ngClass]="getConfidenceClass(extractedData.confidence.rabbi['knownAs'] || 0)">{{ extractedData.confidence.rabbi['knownAs'] || 0 }}%</span></label>
+          <input type="text" id="knownAs" [(ngModel)]="rabbi.knownAs" class="form-control-sm rtl-input" [ngClass]="[compareField('knownAs', rabbi.knownAs), getFieldClass('knownAs')]">
+        </div>
+
+        <div class="form-group-compact">
+          <label for="yearOfBirth">
+            שנת לידה 
+            <span class="confidence-badge" [ngClass]="getConfidenceClass(extractedData.confidence.rabbi['YearOfBirth'] || 0)">{{ extractedData.confidence.rabbi['YearOfBirth'] || 0 }}%</span>
+            <span *ngIf="rabbi.Approx === 1" class="approx-badge">⚠️ APPROX</span>
+          </label>
+          <input type="number" id="yearOfBirth" [(ngModel)]="rabbi.YearOfBirth" class="form-control-sm" [ngClass]="compareField('YearOfBirth', rabbi.YearOfBirth)">
+        </div>
+
+        <div class="form-group-compact">
+          <label for="yearOfDeath">
+            שנת פטירה 
+            <span class="confidence-badge" [ngClass]="getConfidenceClass(extractedData.confidence.rabbi['YearOfDeath'] || 0)">{{ extractedData.confidence.rabbi['YearOfDeath'] || 0 }}%</span>
+            <span *ngIf="rabbi.Approx === 1" class="approx-badge">⚠️ APPROX</span>
+          </label>
+          <input type="number" id="yearOfDeath" [(ngModel)]="rabbi.YearOfDeath" class="form-control-sm" [ngClass]="compareField('YearOfDeath', rabbi.YearOfDeath)">
+        </div>
+
+        <div class="form-group-compact">
+          <label for="city">עיר</label>
+          <input type="text" id="city" [(ngModel)]="rabbi.City" class="form-control-sm rtl-input">
+        </div>
+
+        <div class="form-group-compact">
+          <label for="country">מדינה</label>
+          <input type="text" id="country" [(ngModel)]="rabbi.Country" class="form-control-sm rtl-input">
+        </div>
+
+        <div class="form-group-compact">
+          <label for="placeOfBirth">מקום לידה</label>
+          <input type="text" id="placeOfBirth" [(ngModel)]="rabbi.PlaceOfBirth" class="form-control-sm rtl-input">
+        </div>
+
+        <div class="form-group-compact">
+          <label for="placeOfPtira">מקום פטירה</label>
+          <input type="text" id="placeOfPtira" [(ngModel)]="rabbi.PlaceOfPtira" class="form-control-sm rtl-input">
+        </div>
+
+        <div class="form-group-compact">
+          <label for="hebDob">תאריך לידה עברי</label>
+          <input type="number" id="hebDob" [(ngModel)]="rabbi.HebDob" class="form-control-sm" placeholder="5000">
+        </div>
+
+        <div class="form-group-compact">
+          <label for="hebDoP">תאריך פטירה עברי</label>
+          <input type="number" id="hebDoP" [(ngModel)]="rabbi.HebDoP" class="form-control-sm" placeholder="5040">
+        </div>
+
+        <div class="form-group-compact">
+          <label for="hebCharDob">לידה עברי (טקסט)</label>
+          <input type="text" id="hebCharDob" [(ngModel)]="rabbi.HebCharDob" class="form-control-sm rtl-input" maxlength="8">
+        </div>
+
+        <div class="form-group-compact">
+          <label for="hebCharDoP">פטירה עברי (טקסט)</label>
+          <input type="text" id="hebCharDoP" [(ngModel)]="rabbi.HebCharDoP" class="form-control-sm rtl-input" maxlength="8">
+        </div>
+
+        <div class="form-group-compact">
+          <label for="approx">משוער (Approx)</label>
+          <select id="approx" [(ngModel)]="rabbi.Approx" class="form-control-sm">
+            <option [ngValue]="null">לא</option>
+            <option [ngValue]="1">כן</option>
+          </select>
+        </div>
+
+        <div class="form-group-compact">
+          <label for="assumed">מוערך (Assumed)</label>
+          <select id="assumed" [(ngModel)]="rabbi.Assumed" class="form-control-sm">
+            <option [ngValue]="0">לא</option>
+            <option [ngValue]="1">כן</option>
+          </select>
+        </div>
+
+        <div class="form-group-compact">
+          <label for="period">תקופה</label>
+          <input type="text" id="period" [(ngModel)]="rabbi.Period" class="form-control-sm rtl-input">
+        </div>
+
+        <div class="form-group-compact full-width-2">
+          <label for="imageUrl">תמונה/ספר URL</label>
+          <input type="text" id="imageUrl" [(ngModel)]="rabbi.ImageUrl" class="form-control-sm">
+        </div>
+
+        <div class="form-group-compact full-width-2">
+          <label for="wikiCityMapUrl">מפת עיר URL</label>
+          <input type="text" id="wikiCityMapUrl" [(ngModel)]="rabbi.wiki_city_map_url" class="form-control-sm">
+        </div>
+
+        <div class="form-group-compact full-width-4">
+          <label for="url">Wikipedia URL</label>
+          <input type="text" id="url" [(ngModel)]="rabbi.URL" class="form-control-sm" readonly>
+        </div>
+
+        <div class="form-group-compact full-width-4">
+          <label for="knownFor">ידוע בזכות</label>
+          <textarea id="knownFor" [(ngModel)]="rabbi.KnownFor" class="form-control-sm rtl-input" rows="2"></textarea>
+        </div>
+
+        <div class="form-group-compact full-width-4">
+          <label for="notes">הערות</label>
+          <textarea id="notes" [(ngModel)]="rabbi.Notes" class="form-control-sm rtl-input" rows="2"></textarea>
+        </div>
+
+        <div class="form-group-compact full-width-4">
+          <label for="sources">מקורות</label>
+          <input type="text" id="sources" [(ngModel)]="rabbi.Sources" class="form-control-sm rtl-input">
+        </div>
+      </div>
+    </div>
+
+    <!-- Books Section -->
+    <div class="books-section" *ngIf="editableBooks.length > 0">
+      <h3>📚 Extracted Books ({{ editableBooks.length }})</h3>
+      <div class="info-message">
+        These books will be saved automatically when you approve the rabbi.
+      </div>
+      <table class="books-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>שם הספר</th>
+            <th>מחבר</th>
+            <th>שנת פרסום</th>
+            <th>הפניה</th>
+            <th>Confidence</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let book of editableBooks; let i = index">
+            <td class="row-number">{{ i + 1 }}</td>
+            <td>
+              <input 
+                type="text" 
+                [(ngModel)]="book.Title"
+                class="form-control-sm rtl-input"
+                placeholder="שם הספר">
+            </td>
+            <td>
+              <input 
+                type="text" 
+                [(ngModel)]="book.Author"
+                class="form-control-sm rtl-input"
+                placeholder="מחבר">
+            </td>
+            <td>
+              <input 
+                type="number" 
+                [(ngModel)]="book.YearPublished"
+                class="form-control-sm"
+                placeholder="1180">
+            </td>
+            <td>
+              <input 
+                type="text" 
+                [(ngModel)]="book.Reference"
+                class="form-control-sm rtl-input"
+                placeholder="מקור">
+            </td>
+            <td>
+              <span class="confidence-badge" [ngClass]="getConfidenceClass(book.confidence)">
+                {{ book.confidence }}%
+              </span>
+            </td>
+            <td>
+              <button class="btn-delete" (click)="deleteBook(i)" title="Delete this book">🗑️</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Relationships Section -->
+    <div class="relationships-section" *ngIf="editableRelationships.length > 0">
+      <h3>👥 Extracted Relationships ({{ editableRelationships.length }})</h3>
+      <div class="info-message">
+        Extracted relationships will be automatically matched to database records by name.
+      </div>
+      <table class="relationships-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>שם</th>
+            <th>סוג קשר</th>
+            <th>משנה</th>
+            <th>עד שנה</th>
+            <th>מקום</th>
+            <th>Confidence</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let rel of editableRelationships; let i = index">
+            <td class="row-number">{{ i + 1 }}</td>
+            <td>
+              <input 
+       table class="events-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>שנה</th>
+            <th>תיאור האירוע או העובדה</th>
+            <th>Confidence</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let event of editableEvents; let i = index">
+            <td class="row-number">{{ i + 1 }}</td>
+            <td>
+              <input 
+                type="number" 
+                [(ngModel)]="event.EventYear"
+                class="form-control-sm"
+                placeholder="1250">
+            </td>
+            <td>
+              <input 
+                type="text"
+                [(ngModel)]="event.HebEventDescription"
+                class="form-control-sm rtl-input"
+                placeholder="תיאור האירוע">
+            </td>
+            <td>
+              <span class="confidence-badge" [ngClass]="getConfidenceClass(event.confidence)">
+                {{ event.confidence }}%
+              </span>
+            </td>
+            <td>
+              <button class="btn-delete" (click)="deleteEvent(i)" title="Delete this event">🗑️</button>
+            </td>
+          </tr>
+        </tbody>
+      </table      <option value="רב">רב</option>
+                <option value="חבר">חבר</option>
+                <option value="משפחה">משפחה</option>
+              </select>
+            </td>
+            <td>
+              <input 
+                type="number" 
+                [(ngModel)]="rel.fromYear"
+                class="form-control-sm"
+                placeholder="1200">
+            </td>
+            <td>
+              <input 
+                type="number" 
+                [(ngModel)]="rel.toYear"
+                class="form-control-sm"
+                placeholder="1250">
+            </td>
+            <td>
+              <input 
+                type="text" 
+                [(ngModel)]="rel.place"
+                class="form-control-sm rtl-input"
+                placeholder="ירושלים">
+            </td>
+            <td>
+              <span class="confidence-badge" [ngClass]="getConfidenceClass(rel.confidence)">
+                {{ rel.confidence }}%
+              </span>
+            </td>
+            <td>
+              <button class="btn-delete" (click)="deleteRelationship(i)" title="Delete this relationship">🗑️</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Events Section -->
+    <div class="events-section" *ngIf="editableEvents.length > 0">
+      <h3>📅 Extracted Events ({{ editableEvents.length }})</h3>
+      <div class="info-message">
+        These events will be saved automatically when you approve the rabbi.
+      </div>
+      <ul class="events-list">
+        <li *ngFor="let event of editableEvents; let i = index" class="event-item">
+          <button class="btn-delete" (click)="deleteEvent(i)" title="Delete this event">🗑️</button>
+          <span class="confidence-badge" [ngClass]="getConfidenceClass(event.confidence)">
+            {{ event.confidence }}%
+          </span>
+          <span class="event-description">{{ event.HebEventDescription || event.EventDescription }}</span>
+          <span class="event-year" *ngIf="event.EventYear">{{ event.EventYear }}:</span>
+          <span class="event-year" *ngIf="!event.EventYear">עובדה:</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Manual Books Section -->
+    <div class="edit-section">
+      <h3>📖 ספרים (Manual Books)</h3>
+      <p class="section-note">הוסף עד 4 ספרים שכתב התלמיד חכם</p>
+      
+      <table class="books-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>שם הספר</th>
+            <th>מחבר</th>
+            <th>שנת פרסום</th>
+            <th>הפניה</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let book of manualBooks; let i = index">
+            <td class="row-number">{{ i + 1 }}</td>
+            <td>
+              <input 
+                type="text" 
+                [(ngModel)]="book.HebTitle"
+                class="form-control-sm rtl-input"
+                placeholder="משנה תורה">
+            </td>
+            <td>
+              <input 
+                type="text" 
+                [(ngModel)]="book.HebAuthor"
+                class="form-control-sm rtl-input"
+                placeholder="רמב&quot;ם">
+            </td>
+            <td>
+              <input 
+                type="number" 
+                [(ngModel)]="book.YearPublished"
+                class="form-control-sm"
+                placeholder="1180">
+            </td>
+            <td>
+              <input 
+                type="text" 
+                [(ngModel)]="book.HebReference"
+                class="form-control-sm rtl-input"
+                placeholder="מקור או הערות נוספות">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Manual Events Section -->
+    <div class="edit-section">
+      <h3>📅 אירועים ועובדות (Manual Events)</h3>
+      <p class="section-note">הוסף עד 10 אירועים או עובדות על התלמיד חכם</p>
+      
+      <table class="events-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>שנה</th>
+            <th>תיאור האירוע או העובדה</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let event of manualEvents; let i = index">
+            <td class="row-number">{{ i + 1 }}</td>
+            <td class="year-col">
+              <input 
+                type="number" 
+                [(ngModel)]="event.EventYear"
+                class="form-control-sm"
+                placeholder="1250">
+            </td>
+            <td class="desc-col">
+              <input 
+                type="text"
+                [(ngModel)]="event.HebEventDescription"
+                class="form-control-sm rtl-input"
+                placeholder="למד בישיבת...">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Manual Relationships Section -->
+    <div class="edit-section">
+      <h3>קשרים ידניים (Manual Relationships)</h3>
+      <p class="section-note">הוסף עד 4 קשרים - תלמיד, רב, חבר, משפחה וכו'</p>
+      
+      <table class="relationships-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>שם</th>
+            <th>Rabbi ID</th>
+            <th>סוג קשר</th>
+            <th>משנה</th>
+            <th>עד שנה</th>
+            <th>מקום</th>
+            <th>קוד משפחה</th>
+            <th>משוער</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let rel of manualRelationships; let i = index">
+            <td class="row-number">{{ i + 1 }}</td>
+            <td>
+              <input 
+                type="text" 
+                [(ngModel)]="rel.hebrewName"
+                class="form-control-sm rtl-input"
+                placeholder="רבי עקיבא">
+            </td>
+            <td>
+              <input 
+                type="number" 
+                [(ngModel)]="rel.rabbi2Id"
+                class="form-control-sm"
+                placeholder="123">
+            </td>
+            <td>
+              <select 
+                [(ngModel)]="rel.relationshipCode"
+                class="form-control-sm rtl-input">
+                <option [ngValue]="null">בחר...</option>
+                <option *ngFor="let type of relationshipTypes" [ngValue]="type.code">
+                  {{ type.name }}
+                </option>
+              </select>
+            </td>
+            <td>
+              <input 
+                type="number" 
+                [(ngModel)]="rel.fromYear"
+                class="form-control-sm"
+                placeholder="1200">
+            </td>
+            <td>
+              <input 
+                type="number" 
+                [(ngModel)]="rel.toYear"
+                class="form-control-sm"
+                placeholder="1250">
+            </td>
+            <td>
+              <input 
+                type="text" 
+                [(ngModel)]="rel.place"
+                class="form-control-sm rtl-input"
+                placeholder="ירושלים">
+            </td>
+            <td>
+              <input 
+                type="number" 
+                [(ngModel)]="rel.familyCode"
+                class="form-control-sm"
+                placeholder="0">
+            </td>
+            <td>
+              <select 
+                [(ngModel)]="rel.isApprox"
+                class="form-control-sm">
+                <option [ngValue]="0">לא</option>
+                <option [ngValue]="1">כן</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button 
+        class="btn btn-success"
+        (click)="approveAndSave()"
+        [disabled]="isSaving || !rabbi.FullName">
+        <span *ngIf="!isSaving">✅ Approve & Save to Database</span>
+        <span *ngIf="isSaving">💾 Saving...</span>
+      </button>
+
+      <button 
+        class="btn btn-danger"
+        (click)="reject()"
+        [disabled]="isSaving">
+        ❌ Reject & Start Over
+      </button>
+    </div>
+  </div>
+</div>

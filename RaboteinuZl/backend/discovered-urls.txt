@@ -1,0 +1,240 @@
+Wikipedia URL Finder - Options: {
+  updateDatabase: false,
+  downloadContent: false,
+  dryRun: false,
+  limitRows: null,
+  onlyMissing: true,
+  verbose: true
+}
+-----------------------------------
+
+Loaded 73 rabbis from CSV
+
+
+[1] Processing: ╫¿╫ס ╫פ╫נ╫ש ╫ס╫ƒ ╫⌐╫¿╫ש╫¿╫נ ╫ע╫נ╫ץ╫ƒ (ID: 10002)
+  Searching for: "╫פ╫נ╫ש ╫ס╫ƒ ╫⌐╫¿╫ש╫¿╫נ ╫ע╫נ╫ץ╫ƒ"
+  No results found
+  Trying alternative name: "╫¿╫ס ╫פ╫נ╫ש ╫ע╫נ╫ץ╫ƒ"
+  Searching for: "╫פ╫נ╫ש ╫ע╫נ╫ץ╫ƒ"
+  Found: ╫פ╫נ╫ש ╫ע╫נ╫ץ╫ƒ -> https://he.wikipedia.org/wiki/%D7%94%D7%90%D7%99_%D7%92%D7%90%D7%95%D7%9F
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%94%D7%90%D7%99_%D7%92%D7%90%D7%95%D7%9F
+
+[2] Processing: ╫¿╫ס ╫ק╫á╫á╫נ╫£ ╫ס╫ƒ ╫ק╫ץ╫⌐╫ש╫נ╫£ (ID: 10003)
+  Searching for: "╫ק╫á╫á╫נ╫£ ╫ס╫ƒ ╫ק╫ץ╫⌐╫ש╫נ╫£"
+  Found: ╫ק╫á╫á╫נ╫£ ╫ס╫ƒ ╫ק╫ץ╫⌐╫ש╫נ╫£ -> https://he.wikipedia.org/wiki/%D7%97%D7%A0%D7%A0%D7%90%D7%9C_%D7%91%D7%9F_%D7%97%D7%95%D7%A9%D7%99%D7%90%D7%9C
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%97%D7%A0%D7%A0%D7%90%D7%9C_%D7%91%D7%9F_%D7%97%D7%95%D7%A9%D7%99%D7%90%D7%9C
+
+[3] Processing: ╫¿╫ס ╫á╫ש╫í╫ש╫¥ ╫ס╫ƒ ╫ש╫ó╫º╫ס ╫ע╫נ╫ץ╫ƒ (ID: 10004)
+  Searching for: "╫á╫ש╫í╫ש╫¥ ╫ס╫ƒ ╫ש╫ó╫º╫ס ╫ע╫נ╫ץ╫ƒ"
+  No results found
+  Trying alternative name: "╫¿╫ס ╫á╫ש╫í╫ש╫¥ ╫ע╫נ╫ץ╫ƒ"
+  Searching for: "╫á╫ש╫í╫ש╫¥ ╫ע╫נ╫ץ╫ƒ"
+  Found: ╫á╫ש╫í╫ש╫¥ ╫ע╫נ╫ץ╫ƒ -> https://he.wikipedia.org/wiki/%D7%A0%D7%99%D7%A1%D7%99%D7%9D_%D7%92%D7%90%D7%95%D7%9F
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%A0%D7%99%D7%A1%D7%99%D7%9D_%D7%92%D7%90%D7%95%D7%9F
+
+[4] Processing: ╫¿╫ס╫ש ╫ש╫ª╫ק╫º ╫נ╫ס╫ƒ ╫ע╫ש╫נ╫¬ (ID: 10005)
+  Searching for: "╫ש╫ª╫ק╫º ╫נ╫ס╫ƒ ╫ע╫ש╫נ╫¬"
+  Found: ╫ש╫ª╫ק╫º ╫נ╫ס╫ƒ ╫ע╫ש╫נ╫¬ -> https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%90%D7%91%D7%9F_%D7%92%D7%99%D7%90%D7%AA
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%90%D7%91%D7%9F_%D7%92%D7%99%D7%90%D7%AA
+
+[5] Processing: ╫¿╫ס╫ש ╫⌐╫£╫₧╫פ ╫נ╫ס╫ƒ ╫ע╫ס╫ש╫¿╫ץ╫£ (ID: 10007)
+  Searching for: "╫⌐╫£╫₧╫פ ╫נ╫ס╫ƒ ╫ע╫ס╫ש╫¿╫ץ╫£"
+  Found: ╫⌐╫£╫₧╫פ ╫נ╫ס╫ƒ ╫ע╫ס╫ש╫¿╫ץ╫£ -> https://he.wikipedia.org/wiki/%D7%A9%D7%9C%D7%9E%D7%94_%D7%90%D7%91%D7%9F_%D7%92%D7%91%D7%99%D7%A8%D7%95%D7%9C
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%A9%D7%9C%D7%9E%D7%94_%D7%90%D7%91%D7%9F_%D7%92%D7%91%D7%99%D7%A8%D7%95%D7%9C
+
+[6] Processing: ╫¿╫ס╫ש ╫ע╫¿╫⌐╫ץ╫¥ ╫ס╫ƒ ╫ש╫פ╫ץ╫ף╫פ (ID: 10008)
+  Searching for: "╫ע╫¿╫⌐╫ץ╫¥ ╫ס╫ƒ ╫ש╫פ╫ץ╫ף╫פ"
+  No results found
+  Trying alternative name: "╫¿╫ס╫á╫ץ ╫ע╫¿╫⌐╫ץ╫¥ ╫₧╫נ╫ץ╫¿ ╫פ╫ע╫ץ╫£╫פ"
+  Searching for: "╫¿╫ס╫á╫ץ ╫ע╫¿╫⌐╫ץ╫¥ ╫₧╫נ╫ץ╫¿ ╫פ╫ע╫ץ╫£╫פ"
+  Found: ╫¿╫ס╫á╫ץ ╫ע╫¿╫⌐╫ץ╫¥ ╫₧╫נ╫ץ╫¿ ╫פ╫ע╫ץ╫£╫פ -> https://he.wikipedia.org/wiki/%D7%A8%D7%91%D7%A0%D7%95_%D7%92%D7%A8%D7%A9%D7%95%D7%9D_%D7%9E%D7%90%D7%95%D7%A8_%D7%94%D7%92%D7%95%D7%9C%D7%94
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%A8%D7%91%D7%A0%D7%95_%D7%92%D7%A8%D7%A9%D7%95%D7%9D_%D7%9E%D7%90%D7%95%D7%A8_%D7%94%D7%92%D7%95%D7%9C%D7%94
+
+[7] Processing: ╫¿╫ס╫ש ╫₧╫á╫ק╫¥ ╫ס╫ƒ ╫⌐╫£╫₧╫פ ╫₧╫₧╫נ╫ש╫¿╫ש (ID: 10011)
+  Searching for: "╫₧╫á╫ק╫¥ ╫ס╫ƒ ╫⌐╫£╫₧╫פ ╫₧╫₧╫נ╫ש╫¿╫ש"
+  No results found
+  Trying alternative name: "╫פ╫₧╫נ╫ש╫¿╫ש"
+  Searching for: "╫פ╫₧╫נ╫ש╫¿╫ש"
+  Found: ╫₧╫á╫ק╫¥ ╫פ╫₧╫נ╫ש╫¿╫ש -> https://he.wikipedia.org/wiki/%D7%9E%D7%A0%D7%97%D7%9D_%D7%94%D7%9E%D7%90%D7%99%D7%A8%D7%99
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%9E%D7%A0%D7%97%D7%9D_%D7%94%D7%9E%D7%90%D7%99%D7%A8%D7%99
+
+[8] Processing: ╫¿╫ס╫ש ╫ש╫ª╫ק╫º ╫נ╫£╫ñ╫í╫ש (ID: 10029)
+  Searching for: "╫ש╫ª╫ק╫º ╫נ╫£╫ñ╫í╫ש"
+  Found: ╫ש╫ª╫ק╫º ╫נ╫£╫ñ╫í╫ש -> https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%90%D7%9C%D7%A4%D7%A1%D7%99
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%90%D7%9C%D7%A4%D7%A1%D7%99
+
+[9] Processing: ╫¿╫ס╫ש ╫á╫¬╫ƒ ╫ס╫ƒ ╫ש╫ק╫ש╫נ╫£ ╫₧╫¿╫ץ╫₧╫ש (ID: 10030)
+  Searching for: "╫á╫¬╫ƒ ╫ס╫ƒ ╫ש╫ק╫ש╫נ╫£ ╫₧╫¿╫ץ╫₧╫ש"
+  No results found
+  Trying alternative name: "╫פ╫ó╫¿╫ץ╫ת"
+  Searching for: "╫פ╫ó╫¿╫ץ╫ת"
+  Found: ╫פ╫ó╫¿╫ץ╫ת -> https://he.wikipedia.org/wiki/%D7%94%D7%A2%D7%A8%D7%95%D7%9A
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%94%D7%A2%D7%A8%D7%95%D7%9A
+
+[10] Processing: ╫¿╫ס╫ש ╫₧╫ש╫₧╫ץ╫ƒ ╫ס╫ƒ ╫ש╫ץ╫í╫ú ╫á╫ף╫ש╫ש╫ƒ (ID: 10041)
+  Searching for: "╫₧╫ש╫₧╫ץ╫ƒ ╫ס╫ƒ ╫ש╫ץ╫í╫ú ╫á╫ף╫ש╫ש╫ƒ"
+  No results found
+  Trying alternative name: "╫נ╫ס╫ש ╫פ╫¿╫₧╫ס╫¥,,,4870,4930,1,╫ף╫│╫¬╫¬╫ó'  ,╫ף╫│╫¬╫¬╫º╫£' ,0,10041"
+  Searching for: "╫נ╫ס╫ש ╫פ╫¿╫₧╫ס╫¥,,,4870,4930,1,╫ף╫│╫¬╫¬╫ó'  ,╫ף╫│╫¬╫¬╫º╫£' ,0,10041"
+  No results found
+  Γ£ק Not found on Wikipedia
+
+[11] Processing: ╫¿╫ס╫ש ╫⌐╫₧╫ץ╫נ╫£ ╫ס╫ƒ ╫₧╫נ╫ש╫¿ (ID: 10043)
+  Searching for: "╫⌐╫₧╫ץ╫נ╫£ ╫ס╫ƒ ╫₧╫נ╫ש╫¿"
+  Found: ╫⌐╫₧╫ץ╫נ╫£ ╫ס╫ƒ ╫₧╫נ╫ש╫¿ -> https://he.wikipedia.org/wiki/%D7%A9%D7%9E%D7%95%D7%90%D7%9C_%D7%91%D7%9F_%D7%9E%D7%90%D7%99%D7%A8
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%A9%D7%9E%D7%95%D7%90%D7%9C_%D7%91%D7%9F_%D7%9E%D7%90%D7%99%D7%A8
+
+[12] Processing: ╫¿╫ס╫ש ╫ש╫ª╫ק╫º ╫ס╫ƒ ╫₧╫נ╫ש╫¿ (ID: 10044)
+  Searching for: "╫ש╫ª╫ק╫º ╫ס╫ƒ ╫₧╫נ╫ש╫¿"
+  Found: ╫ש╫ª╫ק╫º ╫ס╫ƒ ╫₧╫נ╫ש╫¿ -> https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%91%D7%9F_%D7%9E%D7%90%D7%99%D7%A8
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%91%D7%9F_%D7%9E%D7%90%D7%99%D7%A8
+
+[13] Processing: ╫¿╫ס╫ש ╫ש╫ª╫ק╫º ╫ס╫ƒ ╫⌐╫₧╫ץ╫נ╫£ (ID: 10046)
+  Searching for: "╫ש╫ª╫ק╫º ╫ס╫ƒ ╫⌐╫₧╫ץ╫נ╫£"
+  Found: ╫ש╫ª╫ק╫º ╫ס╫ƒ ╫⌐╫₧╫ץ╫נ╫£ -> https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%91%D7%9F_%D7%A9%D7%9E%D7%95%D7%90%D7%9C
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%91%D7%9F_%D7%A9%D7%9E%D7%95%D7%90%D7%9C
+
+[14] Processing: ╫¿╫ס╫ש ╫נ╫£╫ó╫צ╫¿ ╫ס╫ƒ ╫ש╫פ╫ץ╫ף╫פ ╫₧╫ע╫¿╫₧╫ש╫ש╫צ╫נ (ID: 10048)
+  Searching for: "╫נ╫£╫ó╫צ╫¿ ╫ס╫ƒ ╫ש╫פ╫ץ╫ף╫פ ╫₧╫ע╫¿╫₧╫ש╫ש╫צ╫נ"
+  No results found
+  Trying alternative name: "╫פ╫¿╫ץ╫º╫ק"
+  Searching for: "╫פ╫¿╫ץ╫º╫ק"
+  Found: ╫פ╫¿╫ץ╫º╫ק -> https://he.wikipedia.org/wiki/%D7%94%D7%A8%D7%95%D7%A7%D7%97
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%94%D7%A8%D7%95%D7%A7%D7%97
+
+[15] Processing: ╫¿╫ס╫ש ╫נ╫ס╫¿╫פ╫¥ ╫ס╫ƒ ╫ף╫ץ╫ף ╫₧╫ñ╫ץ╫⌐╫º╫ש╫ש╫¿╫פ (ID: 10049)
+  Searching for: "╫נ╫ס╫¿╫פ╫¥ ╫ס╫ƒ ╫ף╫ץ╫ף ╫₧╫ñ╫ץ╫⌐╫º╫ש╫ש╫¿╫פ"
+  Found: ╫נ╫ס╫¿╫פ╫¥ ╫ס╫ƒ ╫ף╫ץ╫ף ╫₧╫ñ╫ץ╫⌐╫º╫ש╫¿╫פ -> https://he.wikipedia.org/wiki/%D7%90%D7%91%D7%A8%D7%94%D7%9D_%D7%91%D7%9F_%D7%93%D7%95%D7%93_%D7%9E%D7%A4%D7%95%D7%A9%D7%A7%D7%99%D7%A8%D7%94
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%90%D7%91%D7%A8%D7%94%D7%9D_%D7%91%D7%9F_%D7%93%D7%95%D7%93_%D7%9E%D7%A4%D7%95%D7%A9%D7%A7%D7%99%D7%A8%D7%94
+
+[16] Processing: ╫¿╫ס╫ש ╫ש╫פ╫ץ╫á╫¬╫ƒ ╫₧╫£╫ץ╫á╫ש╫£ (ID: 10050)
+  Searching for: "╫ש╫פ╫ץ╫á╫¬╫ƒ ╫₧╫£╫ץ╫á╫ש╫£"
+  Found: ╫ש╫פ╫ץ╫á╫¬╫ƒ ╫₧╫£╫ץ╫á╫ש╫£ -> https://he.wikipedia.org/wiki/%D7%99%D7%94%D7%95%D7%A0%D7%AA%D7%9F_%D7%9E%D7%9C%D7%95%D7%A0%D7%99%D7%9C
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%99%D7%94%D7%95%D7%A0%D7%AA%D7%9F_%D7%9E%D7%9C%D7%95%D7%A0%D7%99%D7%9C
+
+[17] Processing: ╫¿╫ס╫ש ╫ש╫פ╫ץ╫ף╫פ ╫פ╫£╫ץ╫ש (ID: 10051)
+  Searching for: "╫ש╫פ╫ץ╫ף╫פ ╫פ╫£╫ץ╫ש"
+  Found: ╫ש╫פ╫ץ╫ף╫פ ╫פ╫£╫ץ╫ש -> https://he.wikipedia.org/wiki/%D7%99%D7%94%D7%95%D7%93%D7%94_%D7%94%D7%9C%D7%95%D7%99
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%99%D7%94%D7%95%D7%93%D7%94_%D7%94%D7%9C%D7%95%D7%99
+
+[18] Processing: ╫¿╫ס╫ש ╫ש╫פ╫ץ╫ף╫פ ╫נ╫£╫ס╫¿╫ע╫£╫ץ╫á╫ש (ID: 10055)
+  Searching for: "╫ש╫פ╫ץ╫ף╫פ ╫נ╫£╫ס╫¿╫ע╫£╫ץ╫á╫ש"
+  Found: ╫ש╫פ╫ץ╫ף╫פ ╫נ╫£╫ס╫¿╫ª╫£╫ץ╫á╫ש -> https://he.wikipedia.org/wiki/%D7%99%D7%94%D7%95%D7%93%D7%94_%D7%90%D7%9C%D7%91%D7%A8%D7%A6%D7%9C%D7%95%D7%A0%D7%99
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%99%D7%94%D7%95%D7%93%D7%94_%D7%90%D7%9C%D7%91%D7%A8%D7%A6%D7%9C%D7%95%D7%A0%D7%99
+
+[19] Processing: ╫¿╫ס╫ש ╫נ╫ס╫¿╫פ╫¥ ╫ס╫ƒ ╫ף╫ץ╫ף ╫פ╫¿╫נ╫⌐╫ץ╫ƒ (ID: 10056)
+  Searching for: "╫נ╫ס╫¿╫פ╫¥ ╫ס╫ƒ ╫ף╫ץ╫ף ╫פ╫¿╫נ╫⌐╫ץ╫ƒ"
+  No results found
+  Trying alternative name: "╫פ╫¿╫נ╫ס╫┤╫ף ╫פ╫¿╫נ╫⌐╫ץ╫ƒ"
+  Searching for: "╫פ╫¿╫נ╫ס╫┤╫ף ╫פ╫¿╫נ╫⌐╫ץ╫ƒ"
+  Found: ╫פ╫¿╫נ╫ס"╫ף ╫פ╫¿╫נ╫⌐╫ץ╫ƒ -> https://he.wikipedia.org/wiki/%D7%94%D7%A8%D7%90%D7%91%22%D7%93_%D7%94%D7%A8%D7%90%D7%A9%D7%95%D7%9F
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%94%D7%A8%D7%90%D7%91%22%D7%93_%D7%94%D7%A8%D7%90%D7%A9%D7%95%D7%9F
+
+[20] Processing: ╫¿╫ס╫ש ╫ף╫ץ╫ף ╫ס╫ƒ ╫נ╫ס╫¿╫פ╫¥ (ID: 10057)
+  Searching for: "╫ף╫ץ╫ף ╫ס╫ƒ ╫נ╫ס╫¿╫פ╫¥"
+  Found: ╫ף╫ץ╫ף ╫ס╫ƒ ╫נ╫ס╫¿╫פ╫¥ -> https://he.wikipedia.org/wiki/%D7%93%D7%95%D7%93_%D7%91%D7%9F_%D7%90%D7%91%D7%A8%D7%94%D7%9D
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%93%D7%95%D7%93_%D7%91%D7%9F_%D7%90%D7%91%D7%A8%D7%94%D7%9D
+
+[21] Processing: ╫¿╫ס╫ש ╫צ╫¿╫ק╫ש╫פ ╫פ╫£╫ץ╫ש ╫₧╫ע╫ש╫¿╫ץ╫á╫פ (ID: 10059)
+  Searching for: "╫צ╫¿╫ק╫ש╫פ ╫פ╫£╫ץ╫ש ╫₧╫ע╫ש╫¿╫ץ╫á╫פ"
+  No results found
+  Trying alternative name: "╫ס╫ó╫£ ╫פ╫₧╫נ╫ץ╫¿"
+  Searching for: "╫ס╫ó╫£ ╫פ╫₧╫נ╫ץ╫¿"
+  Found: ╫ס╫ó╫£ ╫פ╫₧╫נ╫ץ╫¿ -> https://he.wikipedia.org/wiki/%D7%91%D7%A2%D7%9C_%D7%94%D7%9E%D7%90%D7%95%D7%A8
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%91%D7%A2%D7%9C_%D7%94%D7%9E%D7%90%D7%95%D7%A8
+
+[22] Processing: ╫¿╫ס╫ש ╫ש╫ª╫ק╫º ╫ס╫ƒ ╫נ╫ס╫נ ╫₧╫נ╫¿╫ש (ID: 10060)
+  Searching for: "╫ש╫ª╫ק╫º ╫ס╫ƒ ╫נ╫ס╫נ ╫₧╫נ╫¿╫ש"
+  Found: ╫ש╫ª╫ק╫º ╫ס╫ƒ ╫נ╫ס╫נ ╫₧╫¿╫ש -> https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%91%D7%9F_%D7%90%D7%91%D7%90_%D7%9E%D7%A8%D7%99
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%91%D7%9F_%D7%90%D7%91%D7%90_%D7%9E%D7%A8%D7%99
+
+[23] Processing: ╫¿╫ס╫ש ╫⌐╫£╫₧╫פ ╫ס╫ƒ ╫ש╫ª╫ק╫º (ID: 10061)
+  Searching for: "╫⌐╫£╫₧╫פ ╫ס╫ƒ ╫ש╫ª╫ק╫º"
+  Found: ╫⌐╫£╫₧╫פ ╫ס╫ƒ ╫ש╫ª╫ק╫º -> https://he.wikipedia.org/wiki/%D7%A9%D7%9C%D7%9E%D7%94_%D7%91%D7%9F_%D7%99%D7%A6%D7%97%D7%A7
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%A9%D7%9C%D7%9E%D7%94_%D7%91%D7%9F_%D7%99%D7%A6%D7%97%D7%A7
+
+[24] Processing: ╫¿╫ס╫ש ╫⌐╫₧╫ó╫ש╫פ (ID: 10064)
+  Searching for: "╫⌐╫₧╫ó╫ש╫פ"
+  Found: ╫⌐╫₧╫ó╫ש╫פ -> https://he.wikipedia.org/wiki/%D7%A9%D7%9E%D7%A2%D7%99%D7%94
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%A9%D7%9E%D7%A2%D7%99%D7%94
+
+[25] Processing: ╫¿╫ס╫ש ╫ש╫º╫ץ╫¬╫ש╫נ╫£ ╫ס╫ƒ ╫₧╫⌐╫פ (ID: 10065)
+  Searching for: "╫ש╫º╫ץ╫¬╫ש╫נ╫£ ╫ס╫ƒ ╫₧╫⌐╫פ"
+  No results found
+  Trying alternative name: "╫₧╫£╫¬╫₧╫ש╫ף╫ש ╫¿╫⌐╫ש   ,,,4820,4880,1,╫ף╫│╫¬╫¬╫¢'  ,╫ף╫│╫¬╫¬╫ñ'  ,0,10065"
+  Searching for: "╫₧╫£╫¬╫₧╫ש╫ף╫ש ╫¿╫⌐╫ש   ,,,4820,4880,1,╫ף╫│╫¬╫¬╫¢'  ,╫ף╫│╫¬╫¬╫ñ'  ,0,10065"
+  No results found
+  Γ£ק Not found on Wikipedia
+
+[26] Processing: ╫¿╫ס╫ש ╫⌐╫₧╫ץ╫נ╫£ ╫ס╫ƒ ╫₧╫נ╫ש╫¿ ╫פ╫º╫ר╫ƒ (ID: 10066)
+  Searching for: "╫⌐╫₧╫ץ╫נ╫£ ╫ס╫ƒ ╫₧╫נ╫ש╫¿ ╫פ╫º╫ר╫ƒ"
+  No results found
+  Trying alternative name: "╫¿╫⌐╫ס╫¥ ╫פ╫º╫ר╫ƒ     ,,,4860,4920,1,╫ף╫│╫¬╫¬╫í'  ,╫ף╫│╫¬╫¬╫º╫¢' ,0,10066"
+  Searching for: "╫¿╫⌐╫ס╫¥ ╫פ╫º╫ר╫ƒ     ,,,4860,4920,1,╫ף╫│╫¬╫¬╫í'  ,╫ף╫│╫¬╫¬╫º╫¢' ,0,10066"
+  No results found
+  Γ£ק Not found on Wikipedia
+
+[27] Processing: ╫¿╫ס╫ש ╫⌐╫₧╫ץ╫נ╫£ ╫ס╫ƒ ╫º╫£╫ץ╫á╫ש╫₧╫ץ╫í ╫₧╫₧╫ע╫á╫ª╫נ (ID: 10073)
+  Searching for: "╫⌐╫₧╫ץ╫נ╫£ ╫ס╫ƒ ╫º╫£╫ץ╫á╫ש╫₧╫ץ╫í ╫₧╫₧╫ע╫á╫ª╫נ"
+  No results found
+  Trying alternative name: "╫¿╫ס╫ש ╫⌐╫₧╫ץ╫נ╫£ ╫פ╫ק╫í╫ש╫ף"
+  Searching for: "╫⌐╫₧╫ץ╫נ╫£ ╫פ╫ק╫í╫ש╫ף"
+  Found: ╫⌐╫₧╫ץ╫נ╫£ ╫פ╫ק╫í╫ש╫ף -> https://he.wikipedia.org/wiki/%D7%A9%D7%9E%D7%95%D7%90%D7%9C_%D7%94%D7%97%D7%A1%D7%99%D7%93
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%A9%D7%9E%D7%95%D7%90%D7%9C_%D7%94%D7%97%D7%A1%D7%99%D7%93
+
+[28] Processing: ╫¿╫ס╫ש ╫ש╫פ╫ץ╫ף╫פ ╫ס╫ƒ ╫⌐╫₧╫ץ╫נ╫£ ╫פ╫ק╫í╫ש╫ף (ID: 10074)
+  Searching for: "╫ש╫פ╫ץ╫ף╫פ ╫ס╫ƒ ╫⌐╫₧╫ץ╫נ╫£ ╫פ╫ק╫í╫ש╫ף"
+  Found: ╫ש╫פ╫ץ╫ף╫פ ╫ס╫ƒ ╫⌐╫₧╫ץ╫נ╫£ ╫פ╫ק╫í╫ש╫ף -> https://he.wikipedia.org/wiki/%D7%99%D7%94%D7%95%D7%93%D7%94_%D7%91%D7%9F_%D7%A9%D7%9E%D7%95%D7%90%D7%9C_%D7%94%D7%97%D7%A1%D7%99%D7%93
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%99%D7%94%D7%95%D7%93%D7%94_%D7%91%D7%9F_%D7%A9%D7%9E%D7%95%D7%90%D7%9C_%D7%94%D7%97%D7%A1%D7%99%D7%93
+
+[29] Processing: ╫¿╫ס╫ש ╫נ╫£╫ש╫ó╫צ╫¿ ╫ס╫ƒ ╫נ╫£╫ש╫ó╫צ╫¿ ╫₧╫ע╫¿╫₧╫ש╫ש╫צ╫נ (ID: 10076)
+  Searching for: "╫נ╫£╫ש╫ó╫צ╫¿ ╫ס╫ƒ ╫נ╫£╫ש╫ó╫צ╫¿ ╫₧╫ע╫¿╫₧╫ש╫ש╫צ╫נ"
+  No results found
+  Trying alternative name: "╫פ╫¿╫נ╫┤╫¥"
+  Searching for: "╫פ╫¿╫נ╫┤╫¥"
+  Found: ╫פ╫¿╫נ"╫¥ ╫נ╫£╫¬╫¿ -> https://he.wikipedia.org/wiki/%D7%94%D7%A8%D7%90%22%D7%9D_%D7%90%D7%9C%D7%AA%D7%A8
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%94%D7%A8%D7%90%22%D7%9D_%D7%90%D7%9C%D7%AA%D7%A8
+
+[30] Processing: ╫¿╫ס╫ש ╫נ╫£╫ש╫ó╫צ╫¿ ╫ס╫ƒ ╫á╫¬╫ƒ (ID: 10077)
+  Searching for: "╫נ╫£╫ש╫ó╫צ╫¿ ╫ס╫ƒ ╫á╫¬╫ƒ"
+  Found: ╫נ╫£╫ש╫ó╫צ╫¿ ╫ס╫ƒ ╫á╫¬╫ƒ -> https://he.wikipedia.org/wiki/%D7%90%D7%9C%D7%99%D7%A2%D7%96%D7%A8_%D7%91%D7%9F_%D7%A0%D7%AA%D7%9F
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%90%D7%9C%D7%99%D7%A2%D7%96%D7%A8_%D7%91%D7%9F_%D7%A0%D7%AA%D7%9F
+
+[31] Processing: ╫¿╫ס╫ש ╫₧╫נ╫ש╫¿ ╫ס╫ƒ ╫ס╫¿╫ץ╫ת ╫₧╫¿╫ץ╫ר╫á╫ס╫ץ╫¿╫ע (ID: 10078)
+  Searching for: "╫₧╫נ╫ש╫¿ ╫ס╫ƒ ╫ס╫¿╫ץ╫ת ╫₧╫¿╫ץ╫ר╫á╫ס╫ץ╫¿╫ע"
+  Found: ╫₧╫נ╫ש╫¿ ╫ס╫ƒ ╫ס╫¿╫ץ╫ת ╫₧╫¿╫ץ╫ר╫á╫ס╫ץ╫¿╫ע -> https://he.wikipedia.org/wiki/%D7%9E%D7%90%D7%99%D7%A8_%D7%91%D7%9F_%D7%91%D7%A8%D7%95%D7%9A_%D7%9E%D7%A8%D7%95%D7%98%D7%A0%D7%91%D7%95%D7%A8%D7%92
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%9E%D7%90%D7%99%D7%A8_%D7%91%D7%9F_%D7%91%D7%A8%D7%95%D7%9A_%D7%9E%D7%A8%D7%95%D7%98%D7%A0%D7%91%D7%95%D7%A8%D7%92
+
+[32] Processing: ╫¿╫ס╫ש ╫ש╫ª╫ק╫º ╫ס╫ƒ ╫נ╫ס╫¿╫פ╫¥ (ID: 10080)
+  Searching for: "╫ש╫ª╫ק╫º ╫ס╫ƒ ╫נ╫ס╫¿╫פ╫¥"
+  Found: ╫ש╫ª╫ק╫º ╫ס╫ƒ ╫נ╫ס╫¿╫פ╫¥ -> https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%91%D7%9F_%D7%90%D7%91%D7%A8%D7%94%D7%9D
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%91%D7%9F_%D7%90%D7%91%D7%A8%D7%94%D7%9D
+
+[33] Processing: ╫¿╫ס╫ש ╫נ╫£╫ש╫ó╫צ╫¿ ╫ס╫ƒ ╫ש╫ץ╫נ╫£ ╫פ╫£╫ץ╫ש (ID: 10082)
+  Searching for: "╫נ╫£╫ש╫ó╫צ╫¿ ╫ס╫ƒ ╫ש╫ץ╫נ╫£ ╫פ╫£╫ץ╫ש"
+  Found: ╫נ╫£╫ש╫ó╫צ╫¿ ╫ס╫ƒ ╫ש╫ץ╫נ╫£ ╫פ╫£╫ץ╫ש -> https://he.wikipedia.org/wiki/%D7%90%D7%9C%D7%99%D7%A2%D7%96%D7%A8_%D7%91%D7%9F_%D7%99%D7%95%D7%90%D7%9C_%D7%94%D7%9C%D7%95%D7%99
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%90%D7%9C%D7%99%D7%A2%D7%96%D7%A8_%D7%91%D7%9F_%D7%99%D7%95%D7%90%D7%9C_%D7%94%D7%9C%D7%95%D7%99
+
+[34] Processing: ╫¿╫ס╫ש ╫ש╫ª╫ק╫º ╫ס╫ƒ ╫₧╫⌐╫פ (ID: 10084)
+  Searching for: "╫ש╫ª╫ק╫º ╫ס╫ƒ ╫₧╫⌐╫פ"
+  Found: ╫ש╫ª╫ק╫º ╫ס╫ƒ ╫₧╫⌐╫פ -> https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%91%D7%9F_%D7%9E%D7%A9%D7%94
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%91%D7%9F_%D7%9E%D7%A9%D7%94
+
+[35] Processing: ╫¿╫ס╫ש ╫ק╫ש╫ש╫¥ ╫ס╫ƒ ╫ש╫ª╫ק╫º (ID: 10085)
+  Searching for: "╫ק╫ש╫ש╫¥ ╫ס╫ƒ ╫ש╫ª╫ק╫º"
+  Found: ╫ק╫ש╫ש╫¥ ╫ש╫ª╫ק╫º ╫ש╫¿╫ץ╫ק╫¥ -> https://he.wikipedia.org/wiki/%D7%97%D7%99%D7%99%D7%9D_%D7%99%D7%A6%D7%97%D7%A7_%D7%99%D7%A8%D7%95%D7%97%D7%9D
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%97%D7%99%D7%99%D7%9D_%D7%99%D7%A6%D7%97%D7%A7_%D7%99%D7%A8%D7%95%D7%97%D7%9D
+
+[36] Processing: ╫¿╫ס╫ש ╫ש╫ó╫º╫ס ╫ס╫ƒ ╫נ╫⌐╫¿ (ID: 10086)
+  Searching for: "╫ש╫ó╫º╫ס ╫ס╫ƒ ╫נ╫⌐╫¿"
+  Found: ╫ש╫ó╫º╫ס ╫ס╫ƒ ╫נ╫⌐╫¿ -> https://he.wikipedia.org/wiki/%D7%99%D7%A2%D7%A7%D7%91_%D7%91%D7%9F_%D7%90%D7%A9%D7%A8
+  Γ£ף Found: https://he.wikipedia.org/wiki/%D7%99%D7%A2%D7%A7%D7%91_%D7%91%D7%9F_%D7%90%D7%A9%D7%A8
+
+===================================
+Summary:
+  Total processed: 36
+  Found: 33
+  Not found: 3
+  Skipped: 37
+===================================
+

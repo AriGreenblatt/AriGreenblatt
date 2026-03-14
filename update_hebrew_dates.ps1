@@ -67,7 +67,7 @@ try {
             $updates = @()
             
             if ($hebDob -and ($currentHebDob -eq [DBNull]::Value -or $currentHebDob -eq $null)) {
-                $updates += "HebDob = $hebDob"
+                $updates += "ebDob = $hebDob"
             }
             if ($hebDoP -and ($currentHebDoP -eq [DBNull]::Value -or $currentHebDoP -eq $null)) {
                 $updates += "HebDoP = $hebDoP"

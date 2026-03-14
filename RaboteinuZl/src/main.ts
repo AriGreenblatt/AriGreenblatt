@@ -1,6 +1,6 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
+import { appConfig } from './app/config/app.config';
+import { AppComponent } from './app/app.component/app.component';
 
 // Disable service worker registration completely
 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {

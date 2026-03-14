@@ -1,0 +1,214 @@
+<!-- Talmid Haham Details Modal/Panel -->
+<div class="details-overlay" (click)="closeDetails()">
+  <div class="details-container" (click)="$event.stopPropagation()" dir="rtl">
+    
+    <!-- Header with Rabbi Name and Close Button -->
+    <div class="details-header">
+      <button class="back-btn" (click)="closeDetails()">→ חזור</button>
+      <h2 class="rabbi-name">{{ rabbi?.FullName || rabbi?.knownAs }}</h2>
+      <button class="close-btn" (click)="closeDetails()">✕</button>
+    </div>
+
+    <!-- Tab Buttons -->
+    <div class="tabs-container">
+      <button 
+        *ngFor="let tab of tabs" 
+        class="tab-btn"
+        [class.active]="activeTab === tab.id"
+        (click)="setActiveTab(tab.id)">
+        <span class="tab-icon">{{ tab.icon }}</span>
+        <span class="tab-label">{{ tab.label }}</span>
+      </button>
+    </div>
+
+    <!-- Tab Content Area -->
+    <div class="tab-content">
+      
+      <!-- אודות - About -->
+      <div *ngIf="activeTab === 'about'" class="content-section about-section">
+        <div class="about-content">
+          
+          <!-- Wikipedia Content -->
+          <div class="wiki-section">
+            <h3>מתוך ויקיפדיה</h3>
+            <div *ngIf="wikiLoading" class="wiki-loading">
+              <p>טוען תוכן מוויקיפדיה...</p>
+            </div>
+            <div *ngIf="wikiError && !wikiLoading" class="wiki-error">
+              <p>{{ wikiError }}</p>
+            </div>
+            <div *ngIf="wikiContent && !wikiLoading" class="wiki-content" [innerHTML]="wikiContent"></div>
+          </div>
+
+          <div class="info-grid">
+            <div *ngIf="rabbi?.FullName" class="info-item">
+              <span class="info-label">שם מלא:</span>
+              <span class="info-value">{{ rabbi.FullName }}</span>
+            </div>
+            <div *ngIf="rabbi?.knownAs" class="info-item">
+              <span class="info-label">מוכר כ:</span>
+              <span class="info-value">{{ rabbi.knownAs }}</span>
+            </div>
+            <div *ngIf="rabbi?.BirthYear" class="info-item">
+              <span class="info-label">שנת לידה:</span>
+              <span class="info-value">{{ rabbi.BirthYear }}</span>
+            </div>
+            <div *ngIf="rabbi?.BirthPlace" class="info-item">
+              <span class="info-label">מקום לידה:</span>
+              <span class="info-value">{{ rabbi.BirthPlace }}</span>
+            </div>
+            <div *ngIf="rabbi?.DeathYear" class="info-item">
+              <span class="info-label">שנת פטירה:</span>
+              <span class="info-value">{{ rabbi.DeathYear }}</span>
+            </div>
+            <div *ngIf="rabbi?.DeathPlace" class="info-item">
+              <span class="info-label">מקום פטירה:</span>
+              <span class="info-value">{{ rabbi.DeathPlace }}</span>
+            </div>
+            <div *ngIf="rabbi?.BurialPlace" class="info-item">
+              <span class="info-label">מקום קבורה:</span>
+              <span class="info-value">{{ rabbi.BurialPlace }}</span>
+            </div>
+            <div *ngIf="rabbi?.Era" class="info-item">
+              <span class="info-label">תקופה:</span>
+              <span class="info-value">{{ rabbi.Era }}</span>
+            </div>
+          </div>
+
+          <div *ngIf="rabbi?.Biography" class="biography-section">
+            <h3>ביוגרפיה</h3>
+            <p class="biography-text">{{ rabbi.Biography }}</p>
+          </div>
+
+          <div *ngIf="rabbi?.Notes" class="notes-section">
+            <h3>הערות נוספות</h3>
+            <p class="notes-text">{{ rabbi.Notes }}</p>
+          </div>
+
+          <!-- Location Map -->
+          <div *ngIf="rabbi?.LocationMap" class="map-section">
+            <h3>מפת מיקום</h3>
+            <div class="map-container">
+              <img [src]="rabbi.LocationMap" alt="מפת מיקום" class="location-map" />
+            </div>
+          </div>
+
+          <!-- Associations Table -->
+          <div *ngIf="getAssociations().length > 0" class="associations-section">
+            <table class="associations-table">
+              <thead>
+                <tr>
+                  <th>סוג יחס</th>
+                  <th>שם מלא</th>
+                  <th>הערות</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let assoc of getAssociations()">
+                  <td>{{ getRelationshipName(assoc.RelationshipCode) }}</td>
+                  <td>
+                    <a class="rabbi-link" (click)="onSelectRabbi(assoc.Rabbi2Id)">
+                      {{ getRabbiName(assoc.Rabbi2Id) }}
+                    </a>
+                  </td>
+                  <td>{{ assoc.HebNotes }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Sforim Table -->
+          <div *ngIf="getSforim().length > 0" class="sforim-section">
+            <h4 class="sforim-title">ספרים</h4>
+            <table class="sforim-table">
+              <tbody>
+                <tr *ngFor="let sefer of getSforim()">
+                  <td>{{ sefer.HebTitle }}</td>
+                  <td>{{ sefer.HebReference }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- ספרים - Books -->
+      <div *ngIf="activeTab === 'sforim'" class="content-section">
+        <h3>ספרים שכתב</h3>
+        <div *ngIf="getSforim().length === 0" class="empty-state">
+          <p>אין מידע על ספרים</p>
+        </div>
+        <div *ngFor="let sefer of getSforim()" class="item-card">
+          <h4>{{ sefer.Title }}</h4>
+          <p *ngIf="sefer.YearPublished">שנת הוצאה: {{ sefer.YearPublished }}</p>
+          <p *ngIf="sefer.Reference" class="reference">{{ sefer.Reference }}</p>
+        </div>
+      </div>
+
+      <!-- תמונות - Photos -->
+      <div *ngIf="activeTab === 'photos'" class="content-section">
+        <h3>תמונות</h3>
+        <div *ngIf="getPhotos().length === 0" class="empty-state">
+          <p>אין תמונות זמינות</p>
+        </div>
+        <div class="photos-grid">
+          <div *ngFor="let photo of getPhotos()" class="photo-card">
+            <img [src]="'http://localhost:3000' + photo.url" [alt]="photo.caption" />
+            <p class="photo-caption">{{ photo.caption }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- קשרים - Relationships -->
+      <div *ngIf="activeTab === 'relationships'" class="content-section">
+        <h3>קשרים עם חכמים אחרים</h3>
+        <div *ngIf="getRelationships().length === 0" class="empty-state">
+          <p>אין מידע על קשרים</p>
+        </div>
+        <div class="relationships-list">
+          <div *ngFor="let rel of getRelationships()" class="relationship-card">
+            <div class="rel-type">{{ rel.RelationshipName }}</div>
+            <div class="rel-name">
+              <a class="rabbi-link" (click)="onSelectRabbi(rel.Rabbi2Id)">
+                {{ rel.Rabbi2Name || rel.Rabbi2KnownAs }}
+              </a>
+            </div>
+            <div *ngIf="rel.Notes" class="rel-notes">{{ rel.Notes }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- סיפורים - Stories -->
+      <div *ngIf="activeTab === 'stories'" class="content-section">
+        <h3>סיפורים ומעשיות</h3>
+        <div *ngIf="getStories().length === 0" class="empty-state">
+          <p>אין סיפורים זמינים כרגע</p>
+          <p class="hint">בקרוב יתווספו סיפורים ומעשיות על חכמינו</p>
+        </div>
+        <div *ngFor="let story of getStories()" class="story-card">
+          <h4>{{ story.title }}</h4>
+          <p>{{ story.content }}</p>
+          <div *ngIf="story.source" class="story-source">מקור: {{ story.source }}</div>
+        </div>
+      </div>
+
+      <!-- מחקר - Research -->
+      <div *ngIf="activeTab === 'research'" class="content-section">
+        <h3>מחקרים ומאמרים</h3>
+        <div *ngIf="getResearch().length === 0" class="empty-state">
+          <p>אין מחקרים זמינים כרגע</p>
+          <p class="hint">בקרוב יתווספו מאמרים אקדמיים ומחקרים</p>
+        </div>
+        <div *ngFor="let article of getResearch()" class="research-card">
+          <h4>{{ article.title }}</h4>
+          <p class="author">מאת: {{ article.author }}</p>
+          <p *ngIf="article.year">שנה: {{ article.year }}</p>
+          <p *ngIf="article.journal">כתב עת: {{ article.journal }}</p>
+          <a *ngIf="article.url" [href]="article.url" target="_blank" class="article-link">קרא עוד</a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

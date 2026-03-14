@@ -1,0 +1,47 @@
+.relationships-section {
+  width: 100%;
+  direction: rtl;
+  font-size: 10px;
+  margin-top: 0.75rem;
+}
+
+.details-heading {
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.section-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.section-table td {
+  padding: 3px 6px;
+  line-height: 1.2;
+  vertical-align: middle;
+}
+
+.table-row-hover:hover {
+  background-color: #f3f4f6;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.link-blue {
+  color: #2563eb;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.link-blue:hover {
+  text-decoration: underline;
+}
+
+.empty-relationships {
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-style: italic;
+}

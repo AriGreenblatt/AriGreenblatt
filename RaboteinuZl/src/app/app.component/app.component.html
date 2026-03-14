@@ -1,0 +1,29 @@
+<!-- RaboteinuZl Database Interface -->
+<div class="container">
+  <header class="hebrew-header">
+    <h1 class="hebrew-title">{{ title }}</h1>
+  </header>
+
+
+
+  <div class="tables-section" *ngIf="tables.length > 0">
+    <h2>Database Tables ({{ tables.length }})</h2>
+    <div class="tables-grid">
+      <div *ngFor="let table of tables" class="table-card">
+        <h3>{{ table.TABLE_NAME }}</h3>
+        <p><strong>Schema:</strong> {{ table.TABLE_SCHEMA }}</p>
+        <p><strong>Type:</strong> {{ table.TABLE_TYPE }}</p>
+        <div class="table-actions">
+          <button class="btn-secondary">
+            View Data
+          </button>
+          <button class="btn-secondary">
+            View Structure
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+</div>

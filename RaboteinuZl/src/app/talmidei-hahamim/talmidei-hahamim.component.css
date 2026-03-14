@@ -1,0 +1,232 @@
+/* Scoped styles for TalmideiHahamimComponent */
+
+.container-block {
+  width: 100%;
+}
+
+.error-banner {
+  background-color: #fee2e2;
+  border: 1px solid #f87171;
+  color: #b91c1c;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  margin-top: 1rem;
+}
+
+.main-card {
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin-top: 0;
+}
+
+.search-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 0.625rem 0;
+}
+
+.search-input-container {
+  margin: 0;
+  max-width: 20rem;
+  direction: rtl;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 28rem;
+  padding: 0.25rem 0.75rem;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #6366f1;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.content-flex {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.table-action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  justify-content: flex-start;
+}
+
+.table-action-buttons .btn {
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 250px;
+  max-width: 250px;
+  position: sticky;
+  top: 10px;
+  margin-top: 55px;
+}
+
+.details-box {
+  width: 100%;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  direction: rtl;
+  font-size: 11px;
+}
+
+.details-content {
+  padding: 6px 8px;
+}
+
+.details-heading {
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-green { background-color: #22c55e; }
+.btn-blue { background-color: #3b82f6; }
+.btn-purple { background-color: #a855f7; }
+.btn-indigo { background-color: #6366f1; }
+.btn-red { background-color: #ef4444; }
+
+.empty-state {
+  text-align: center;
+  color: #4b5563;
+  font-style: italic;
+  padding: 1.25rem;
+  background-color: #f9fafb;
+  border-radius: 0.375rem;
+  direction: rtl;
+}
+
+.image-container {
+  width: 100%;
+  text-align: center;
+  margin-top: 0.625rem;
+}
+
+.rabbi-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.relationships-section {
+  width: 100%;
+  direction: rtl;
+  font-size: 10px;
+  margin-top: 0.5rem;
+}
+
+.section-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-row-hover:hover {
+  background-color: #f3f4f6;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.link-blue {
+  color: #2563eb;
+  cursor: pointer;
+  text-decoration: none;
+}
+.link-blue:hover { text-decoration: underline; }
+
+.sforim-section {
+  width: 100%;
+  margin-top: 0.75rem;
+  direction: rtl;
+  font-size: 10px;
+}
+
+.table-container {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+  direction: rtl;
+  text-align: right;
+}
+
+.data-table thead tr:first-child {
+  background-color: #6366f1;
+  color: white;
+}
+
+.data-table th, .data-table td {
+  padding: 0.25rem;
+  border: 1px solid #e5e7eb;
+}
+
+.data-table th {
+  cursor: pointer;
+}
+
+.filter-row {
+  background-color: #f3f4f6;
+}
+
+.filter-input {
+  width: 100%;
+  padding: 0.125rem 0.25rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.row-selected {
+  background-color: #dbeafe;
+}
+
+.row-editing {
+  background-color: #fefce8;
+}
+
+.table-link {
+  color: #2563eb;
+  text-decoration: none;
+}
+.table-link:hover { text-decoration: underline; }

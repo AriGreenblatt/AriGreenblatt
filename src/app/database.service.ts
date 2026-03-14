@@ -108,6 +108,13 @@ export class DatabaseService {
   }
 
   /**
+   * Get all sforim with author info
+   */
+  getSforim(): Observable<ApiResponse<any[]>> {
+    return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/sforim`, this.httpOptions);
+  }
+
+  /**
    * Execute a custom SQL query
    * BE CAREFUL: This allows arbitrary SQL execution
    */

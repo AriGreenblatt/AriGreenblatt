@@ -1,0 +1,102 @@
+RabbiID|url
+-------|---
+10001|https://he.wikipedia.org/wiki/רב_שרירא_גאון
+10002|https://he.wikipedia.org/wiki/׳”׳׳™_׳’׳׳•׳
+10003|https://he.wikipedia.org/wiki/׳—׳ ׳ ׳׳_׳‘׳_׳—׳•׳©׳™׳׳
+10004|https://he.wikipedia.org/wiki/׳ ׳™׳¡׳™׳_׳’׳׳•׳
+10005|https://he.wikipedia.org/wiki/׳™׳¦׳—׳§_׳׳‘׳_׳’׳™׳׳×
+10007|https://he.wikipedia.org/wiki/׳©׳׳׳”_׳׳‘׳_׳’׳‘׳™׳¨׳•׳
+10008|https://he.wikipedia.org/wiki/׳¨׳‘׳ ׳•_׳’׳¨׳©׳•׳_׳׳׳•׳¨_׳”׳’׳•׳׳”
+10010|https://he.wikipedia.org/wiki/משה_הדרשן
+10011|https://he.wikipedia.org/wiki/׳׳ ׳—׳_׳”׳׳׳™׳¨׳™
+10016|https://he.wikipedia.org/wiki/אליעזר_הגדול_בן_יצחק
+10017|https://he.wikipedia.org/wiki/יעקב_בן_יקר
+10018|https://he.wikipedia.org/wiki/יצחק_בן_יהודה
+10020|https://he.wikipedia.org/wiki/חושיאל_בן_אלחנן
+10021|https://he.wikipedia.org/wiki/שמריה_בן_אלחנן
+10022|https://he.wikipedia.org/wiki/משה_בן_חנוך
+10024|https://he.wikipedia.org/wiki/חנוך_בן_משה
+10029|https://he.wikipedia.org/wiki/׳™׳¦׳—׳§_׳׳׳₪׳¡׳™
+10030|https://he.wikipedia.org/wiki/׳”׳¢׳¨׳•׳
+10031|https://he.wikipedia.org/wiki/אלעזר_הקליר
+10043|https://he.wikipedia.org/wiki/׳©׳׳•׳׳_׳‘׳_׳׳׳™׳¨
+10044|https://he.wikipedia.org/wiki/׳™׳¦׳—׳§_׳‘׳_׳׳׳™׳¨
+10046|https://he.wikipedia.org/wiki/׳™׳¦׳—׳§_׳‘׳_׳©׳׳•׳׳
+10047|https://he.wikipedia.org/wiki/אלעזר_בן_יהודה
+10048|https://he.wikipedia.org/wiki/׳”׳¨׳•׳§׳—
+10049|https://he.wikipedia.org/wiki/׳׳‘׳¨׳”׳_׳‘׳_׳“׳•׳“_׳׳₪׳•׳©׳§׳™׳¨׳”
+10050|https://he.wikipedia.org/wiki/׳™׳”׳•׳ ׳×׳_׳׳׳•׳ ׳™׳
+10051|https://he.wikipedia.org/wiki/׳™׳”׳•׳“׳”_׳”׳׳•׳™
+10052|https://he.wikipedia.org/wiki/יוסף_אבן_מיגאש
+10053|https://he.wikipedia.org/wiki/משה_בן_מימון
+10054|https://he.wikipedia.org/wiki/משה_בן_נחמן
+10055|https://he.wikipedia.org/wiki/׳™׳”׳•׳“׳”_׳׳׳‘׳¨׳¦׳׳•׳ ׳™
+10056|https://he.wikipedia.org/wiki/׳”׳¨׳׳‘"׳“_׳”׳¨׳׳©׳•׳
+10057|https://he.wikipedia.org/wiki/׳“׳•׳“_׳‘׳_׳׳‘׳¨׳”׳
+10059|https://he.wikipedia.org/wiki/׳‘׳¢׳_׳”׳׳׳•׳¨
+10060|https://he.wikipedia.org/wiki/׳™׳¦׳—׳§_׳‘׳_׳׳‘׳_׳׳¨׳™
+10061|https://he.wikipedia.org/wiki/׳©׳׳׳”_׳‘׳_׳™׳¦׳—׳§
+10063|https://he.wikipedia.org/wiki/יצחק_בן-רובי
+10064|https://he.wikipedia.org/wiki/׳©׳׳¢׳™׳”
+10066|https://he.wikipedia.org/wiki/Recovering_the_Satellites
+10067|https://he.wikipedia.org/wiki/אלעזר_בר_שמואל_אלוף
+10073|https://he.wikipedia.org/wiki/׳©׳׳•׳׳_׳”׳—׳¡׳™׳“
+10074|https://he.wikipedia.org/wiki/׳™׳”׳•׳“׳”_׳‘׳_׳©׳׳•׳׳_׳”׳—׳¡׳™׳“
+10076|https://he.wikipedia.org/wiki/׳”׳¨׳"׳_׳׳׳×׳¨
+10077|https://he.wikipedia.org/wiki/׳׳׳™׳¢׳–׳¨_׳‘׳_׳ ׳×׳
+10078|https://he.wikipedia.org/wiki/׳׳׳™׳¨_׳‘׳_׳‘׳¨׳•׳_׳׳¨׳•׳˜׳ ׳‘׳•׳¨׳’
+10079|/img/rosh.jpg
+10080|https://he.wikipedia.org/wiki/׳™׳¦׳—׳§_׳‘׳_׳׳‘׳¨׳”׳
+10082|https://he.wikipedia.org/wiki/׳׳׳™׳¢׳–׳¨_׳‘׳_׳™׳•׳׳_׳”׳׳•׳™
+10084|https://he.wikipedia.org/wiki/׳™׳¦׳—׳§_׳‘׳_׳׳©׳”
+10085|https://he.wikipedia.org/wiki/׳—׳™׳™׳_׳™׳¦׳—׳§_׳™׳¨׳•׳—׳
+10086|https://he.wikipedia.org/wiki/׳™׳¢׳§׳‘_׳‘׳_׳׳©׳¨
+10218|https://he.wikipedia.org/wiki/מנחם_המאירי
+10259|https://he.wikipedia.org/wiki/מאיר_מרוטנבורג
+10268|https://he.wikipedia.org/wiki/יצחק_בן_משה_מווינה
+10269|https://he.wikipedia.org/wiki/10000
+10298|https://he.wikipedia.org/wiki/שמעון_בן_צמח_דוראן
+10299|https://he.wikipedia.org/wiki/שלמה_בן_שמעון_דוראן
+10318|https://he.wikipedia.org/wiki/אברהם_בן_הרמב"ם
+10500|https://he.wikipedia.org/wiki/שלמה_בן_אדרת
+10501|https://he.wikipedia.org/wiki/יום_טוב_בן_אברהם_אשבילי
+10510|https://he.wikipedia.org/wiki/הר"ן
+10511|https://he.wikipedia.org/wiki/הריב"ש
+10515|https://he.wikipedia.org/wiki/%D7%99%D7%A6%D7%97%D7%A7_%D7%A1%D7%92%D7%99_%D7%A0%D7%94%D7%95%D7%A8
+10516|https://he.wikipedia.org/wiki/מנחם_רקנאטי
+10600|https://he.wikipedia.org/wiki/פרחיה_בן_ניסים
+10601|https://he.wikipedia.org/wiki/יהודה_בר_יקר
+10602|https://he.wikipedia.org/wiki/אהרן_הלוי
+10603|https://he.wikipedia.org/wiki/קלונימוס_בן_קלונימוס
+10604|https://he.wikipedia.org/wiki/לוי_בן_גרשום
+10610|https://he.wikipedia.org/wiki/דוד_בונפיל
+10613|https://he.wikipedia.org/wiki/מאיר_הכהן
+10614|https://he.wikipedia.org/wiki/ישראל_אשכנזי
+10619|https://he.wikipedia.org/wiki/שלמה_בן_פרחון
+10644|https://he.wikipedia.org/wiki/יעקב_בן_מאיר
+10645|https://he.wikipedia.org/wiki/יהודה_החסיד
+10646|https://he.wikipedia.org/wiki/יצחק_בן_אשר_הלוי
+10648|https://he.wikipedia.org/wiki/יחיאל_מפריז
+10651|https://he.wikipedia.org/wiki/בחיי_בן_אשר
+10653|https://he.wikipedia.org/wiki/רב_שמואל_בן_חפני_גאון
+10654|https://he.wikipedia.org/wiki/יונה_אבן_ג'נאח
+10655|https://he.wikipedia.org/wiki/אורי_חזקיה
+10656|https://he.wikipedia.org/wiki/אליהו_הזקן
+10657|https://he.wikipedia.org/wiki/רב_סעדיה_גאון
+10659|https://he.wikipedia.org/wiki/מיליה_דיין
+10660|https://he.wikipedia.org/wiki/משולם_בן_קלונימוס
+10661|https://he.wikipedia.org/wiki/ששנא_גאון
+10662|https://he.wikipedia.org/wiki/אחא_משבחא
+10663|https://he.wikipedia.org/wiki/יהודאי_גאון
+10664|https://he.wikipedia.org/wiki/חנינאי_כהנא_בן_הונא_גאון
+10665|https://he.wikipedia.org/wiki/אבא
+10666|https://he.wikipedia.org/wiki/פרקוי_בן_באבוי
+10667|https://he.wikipedia.org/wiki/שמעון_קיירא
+10668|https://he.wikipedia.org/wiki/כהן_צדק_בן_איבומאי_גאון
+10669|https://he.wikipedia.org/wiki/רחמים_שר_שלום
+10670|https://he.wikipedia.org/wiki/נטרונאי_בן_נחמיה
+10671|https://he.wikipedia.org/wiki/עמרם
+10673|https://he.wikipedia.org/wiki/נחמן_מברסלב
+10674|https://he.wikipedia.org/wiki/אייזק_היל
+
+(98 rows affected)

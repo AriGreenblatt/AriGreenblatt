@@ -32,5 +32,7 @@ const fib = makeFib();
 console.log('fib(90) =', fib(90).toString());
 console.log(groupBy(['apple', 'avocado', 'banana', 'blueberry'], w => w[0]));
 
+// All three calls land inside the same 100ms window, so only the last
+// one ('c') ever fires — that's the point of a trailing-edge debounce.
 const logOnce = debounce(msg => console.log('debounced:', msg), 100);
 ['a', 'b', 'c'].forEach(logOnce);

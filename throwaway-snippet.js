@@ -24,6 +24,8 @@ function debounce(fn, waitMs) {
 const groupBy = (items, keyOf) =>
   items.reduce((acc, item) => {
     const key = keyOf(item);
+    // ??= assigns only when the slot is null/undefined, so the first item
+    // for a key creates its array and every later one reuses it.
     (acc[key] ??= []).push(item);
     return acc;
   }, {});
